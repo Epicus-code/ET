@@ -1,0 +1,754 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Eberhard Teufel</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&family=Figtree:wght@400;500;600&display=swap">
+<style>
+/* Concept: a quiet reading room. Paper-grey ground, ink text, one ultramarine taken from the paintings.
+   Desktop: sticky contents rail on the left, one reading column. Phone: top bar with a contents sheet. */
+:root{
+  --bg:#F4F5F7; --surface:#FFFFFF; --ink:#151821; --muted:#5A6272; --line:#DEE1E8;
+  --accent:#2B45C8; --accent-soft:#E6EAFA; --on-accent:#FFFFFF; --veil:rgba(8,10,16,.94);
+  --f-display:'Newsreader',Georgia,'Times New Roman',serif;
+  --f-body:'Figtree',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0F1218; --surface:#171B25; --ink:#ECEFF5; --muted:#9BA3B4; --line:#262C3A;
+  --accent:#93A5FF; --accent-soft:#1B2240; --on-accent:#0F1218; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0F1218; --surface:#171B25; --ink:#ECEFF5; --muted:#9BA3B4; --line:#262C3A;
+  --accent:#93A5FF; --accent-soft:#1B2240; --on-accent:#0F1218; color-scheme:dark}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:calc(76px + env(safe-area-inset-top,0px))}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 17px/1.65 var(--f-body);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));-webkit-text-size-adjust:100%}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:40;background:var(--bg)}
+img{display:block;max-width:100%;height:auto}
+a{color:inherit}
+button{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:3px;border-radius:3px}
+h1,h2,h3,h4{font-family:var(--f-display);font-weight:400;margin:0;text-wrap:balance}
+p{margin:0 0 1em;max-width:64ch}
+
+/* top bar */
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;background:var(--bg);
+  margin-inline:calc(-1*max(16px,env(safe-area-inset-left,0px)));padding-inline:max(16px,env(safe-area-inset-left,0px));border-bottom:1px solid var(--line)}
+.bar-in{max-width:1180px;margin-inline:auto;height:60px;display:flex;align-items:center;gap:8px}
+.brand{font:400 20px var(--f-display);text-decoration:none;margin-right:auto;white-space:nowrap}
+.langs{display:flex;gap:2px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:3px}
+.langs button{border:0;background:none;color:var(--muted);font:500 13px var(--f-body);padding:7px 10px;border-radius:999px;cursor:pointer;min-height:34px}
+.langs button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.menu{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:0 13px;min-height:42px;flex:none;font:500 14px var(--f-body);cursor:pointer}
+.menu[aria-expanded="true"]{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+
+/* layout + contents rail */
+.layout{max-width:1180px;margin-inline:auto;display:block}
+.toc{display:none;position:fixed;z-index:25;left:0;right:0;top:calc(61px + env(safe-area-inset-top,0px));bottom:0;overflow:auto;background:var(--bg);
+  padding:18px max(16px,env(safe-area-inset-left,0px)) 40px}
+body.toc-open .toc{display:block}
+body.toc-open{overflow:hidden}
+.toc h2{font:600 13px var(--f-body);color:var(--muted);margin:22px 0 6px;letter-spacing:.02em}
+.toc h2:first-child{margin-top:0}
+.toc ul{list-style:none;margin:0;padding:0}
+.toc a{display:block;text-decoration:none;padding:9px 0;font-size:17px;color:var(--ink)}
+.toc a[aria-current="true"]{color:var(--accent);font-weight:600}
+@media(min-width:1000px){
+  .layout{display:grid;grid-template-columns:190px minmax(0,1fr);gap:64px}
+  .menu{display:none}
+  .toc{display:block;position:sticky;top:calc(84px + env(safe-area-inset-top,0px));align-self:start;max-height:calc(100vh - 110px);padding:0;overflow:auto;background:none}
+  .toc a{font-size:15px;padding:5px 0}
+  body.toc-open{overflow:auto}
+}
+main{min-width:0}
+
+/* hero */
+.hero{padding-block:44px 8px}
+h1{font-weight:300;font-size:clamp(52px,12.5vw,128px);line-height:.95;letter-spacing:-.025em}
+.lede{font:300 clamp(22px,3.4vw,30px)/1.35 var(--f-display);margin:22px 0 0;max-width:30ch}
+.hero-img{margin:36px calc(-1*max(16px,env(safe-area-inset-left,0px))) 0}
+.hero-img img{width:100%;height:min(62vw,560px);object-fit:cover;object-position:70% 40%}
+@media(min-width:1000px){.hero-img{margin-inline:0}.hero-img img{border-radius:4px}}
+.facts{display:grid;grid-template-columns:1fr 1fr;gap:22px 18px;margin:30px 0 0}
+.facts dt{font-size:13.5px;color:var(--muted)}
+.facts dd{margin:2px 0 0;font-weight:500;line-height:1.35}
+@media(min-width:760px){.facts{grid-template-columns:repeat(4,1fr)}}
+
+/* sections */
+section{padding-block:76px 0}
+.sec-head{display:grid;gap:6px;margin-bottom:26px}
+.sec-head .yrs{font:300 clamp(44px,8vw,76px)/1 var(--f-display);color:var(--accent);letter-spacing:-.02em;font-variant-numeric:lining-nums}
+h2{font-size:clamp(30px,5vw,44px);line-height:1.1}
+.sec-head h2{font-size:clamp(22px,3.2vw,28px);font-weight:500;font-family:var(--f-body);letter-spacing:-.005em}
+.intro{color:var(--muted);font-size:18px;margin-bottom:36px}
+.sub{font:600 14px var(--f-body);color:var(--muted);margin:46px 0 16px}
+
+/* timeline */
+.tl{list-style:none;margin:0;padding:0;display:grid;gap:0}
+.tl li{display:grid;gap:4px;padding:26px 0;border-top:1px solid var(--line)}
+.tl .y{font:500 15px var(--f-body);color:var(--accent);font-variant-numeric:tabular-nums}
+.tl h4{font:400 26px/1.2 var(--f-display)}
+.tl p{margin:8px 0 0;color:var(--ink)}
+.tl .pair{display:flex;flex-wrap:wrap;gap:16px;margin-top:16px;align-items:flex-end}
+.tl figure{margin:0}
+.tl figure img{border-radius:3px}
+figcaption{font-size:13.5px;line-height:1.4;color:var(--muted);margin-top:8px;max-width:46ch}
+@media(min-width:760px){.tl li{grid-template-columns:88px minmax(0,1fr);gap:0 28px}.tl .y{padding-top:7px}}
+
+/* photo strips */
+.strip{display:grid;grid-auto-flow:column;grid-auto-columns:min(72%,250px);gap:12px;overflow-x:auto;scroll-snap-type:x proximity;
+  margin-inline:calc(-1*max(16px,env(safe-area-inset-left,0px)));padding:0 max(16px,env(safe-area-inset-left,0px)) 10px;scrollbar-width:thin}
+.strip figure{margin:0;scroll-snap-align:start}
+.strip .ph{aspect-ratio:4/3;overflow:hidden;background:var(--line);border-radius:3px}
+.strip img{width:100%;height:100%;object-fit:cover}
+.strip .yr{display:block;margin-top:8px;font-size:13px;color:var(--accent);font-weight:500}
+.strip figcaption{margin-top:0;color:var(--ink);font-size:14.5px}
+.strip.paint .ph{aspect-ratio:1/1;background:var(--surface)}
+.strip.paint img{object-fit:contain}
+@media(min-width:760px){.strip{grid-auto-flow:row;grid-auto-columns:auto;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:24px 16px;margin-inline:0;padding:0;overflow:visible}}
+
+/* roots */
+.fam{display:grid;grid-template-columns:repeat(2,1fr);gap:26px 14px}
+.fam figure{margin:0}
+.fam .ph{aspect-ratio:4/5;background:var(--line);overflow:hidden;border-radius:3px}
+.fam img{width:100%;height:100%;object-fit:cover;object-position:50% 25%}
+.fam b{display:block;font:400 19px/1.2 var(--f-display);margin-top:10px}
+.fam small{display:block;color:var(--muted);font-size:14px;line-height:1.4;margin-top:2px}
+@media(min-width:760px){.fam{grid-template-columns:repeat(3,1fr);gap:32px 22px}}
+.note{margin-top:34px;padding:18px 20px;background:var(--accent-soft);border-radius:4px;max-width:64ch}
+.note p{margin:0}
+
+/* bali */
+.big{font:300 clamp(26px,4.6vw,40px)/1.22 var(--f-display);max-width:22em;margin:28px 0}
+.bali{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:28px}
+.bali .ph{aspect-ratio:3/4;overflow:hidden;border-radius:3px;background:var(--line)}
+.bali img{width:100%;height:100%;object-fit:cover}
+.bali figure{margin:0}
+
+/* titles */
+.quals{list-style:none;margin:0;padding:0}
+.quals li{display:grid;grid-template-columns:64px minmax(0,1fr);gap:14px;padding:16px 0;border-top:1px solid var(--line)}
+.quals .y{color:var(--accent);font-weight:500;font-variant-numeric:tabular-nums}
+.quals b{font-weight:600;display:block}
+.quals span{color:var(--muted);font-size:15.5px}
+@media(min-width:900px){.quals{columns:2;column-gap:48px}.quals li{break-inside:avoid}}
+
+/* albums */
+.albums{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.albums button{all:unset;box-sizing:border-box;display:grid;grid-template-columns:40px minmax(0,1fr) auto;gap:12px;align-items:baseline;width:100%;padding:13px 16px;background:var(--surface);border:1px solid var(--line);border-radius:4px;cursor:pointer;min-height:48px}
+.albums button:hover,.albums button[aria-expanded="true"]{border-color:var(--accent)}
+.albums button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.albums .n{color:var(--accent);font-weight:600;font-variant-numeric:tabular-nums}
+.albums .t{font-size:15.5px;line-height:1.4;overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.albums button[aria-expanded="true"] .t{display:block}
+.albums .c{color:var(--muted);font-size:14px;font-variant-numeric:tabular-nums}
+.gal{margin:12px 0 22px}
+.gal h5{font:600 14px var(--f-body);color:var(--accent);margin:20px 0 8px;overflow-wrap:anywhere}
+.gal .g{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:6px}
+.gal .g button{all:unset;display:block;aspect-ratio:1/1;overflow:hidden;background:var(--line);border-radius:2px;cursor:zoom-in}
+.gal .g button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.gal .g img{width:100%;height:100%;object-fit:cover}
+.gal.tall .g{grid-template-columns:repeat(auto-fill,minmax(130px,1fr))}
+.gal.tall .g button{aspect-ratio:3/4}
+.gal.tall .g img{object-position:50% 0}
+.ld{color:var(--muted);font-size:14.5px}
+
+/* writings */
+.qs{display:grid;gap:0}
+.q{padding:28px 0;border-top:1px solid var(--line)}
+.q blockquote{margin:0;font:300 clamp(24px,4vw,32px)/1.25 var(--f-display);text-wrap:balance;max-width:26em}
+.q .orig{font-style:italic;color:var(--muted);font-size:15.5px;margin:10px 0 0;max-width:60ch}
+.q .when{display:block;font-size:14px;color:var(--accent);font-weight:500;margin-bottom:8px}
+@media(min-width:900px){.qs{grid-template-columns:1fr 1fr;column-gap:56px}}
+.name{margin-top:36px;padding:22px 24px;background:var(--surface);border:1px solid var(--line);border-radius:4px;max-width:64ch}
+.name h3{font-size:24px;margin-bottom:8px}
+.name p{margin-bottom:6px}
+.name .yr{color:var(--muted);font-size:14px}
+.docs{display:grid;gap:8px}
+details.doc{background:var(--surface);border:1px solid var(--line);border-radius:4px}
+details.doc>summary{cursor:pointer;list-style:none;display:grid;grid-template-columns:76px minmax(0,1fr) auto;gap:12px;align-items:baseline;padding:14px 16px;min-height:50px}
+details.doc>summary::-webkit-details-marker{display:none}
+details.doc>summary::after{content:"+";color:var(--muted);font-size:20px;line-height:1}
+details.doc[open]>summary::after{content:"–"}
+details.doc>summary .k{color:var(--accent);font-weight:600;font-size:14px;overflow-wrap:anywhere}
+details.doc>summary b{font:400 19px/1.25 var(--f-display)}
+details.doc[open]>summary{border-bottom:1px solid var(--line)}
+.doc .body{padding:8px 18px 22px}
+.doc pre{white-space:pre-wrap;overflow-wrap:anywhere;font:400 15.5px/1.7 var(--f-body);margin:14px 0;max-width:72ch}
+.dnote{color:var(--muted);font-size:14px;margin:12px 0 0}
+.arch{list-style:none;margin:0;padding:0}
+.arch li{display:grid;grid-template-columns:110px minmax(0,1fr);gap:14px;padding:12px 0;border-top:1px solid var(--line)}
+.arch .k{color:var(--accent);font-weight:600;font-size:14.5px}
+footer{margin-top:96px;padding-block:28px 56px;border-top:1px solid var(--line);color:var(--muted);font-size:14.5px}
+footer p{margin:0}
+
+/* lightbox */
+#lb{position:fixed;inset:0;z-index:100;background:var(--veil);display:none;flex-direction:column;align-items:center;justify-content:center;
+  padding:max(14px,env(safe-area-inset-top,0px)) max(14px,env(safe-area-inset-right,0px)) max(14px,env(safe-area-inset-bottom,0px)) max(14px,env(safe-area-inset-left,0px))}
+#lb.on{display:flex}
+#lb img{max-width:100%;max-height:78vh;object-fit:contain;border-radius:2px}
+#lb p{color:#DCE0EA;font-size:14px;margin:12px 0 0;text-align:center;max-width:60ch}
+#lb .bar2{display:flex;gap:10px;margin-top:12px;align-items:center}
+#lb button{min-width:48px;min-height:44px;background:#1D2231;color:#fff;border:1px solid #3A4160;border-radius:999px;cursor:pointer;padding:0 16px;font-size:15px}
+#lb .ct{color:#A9B0C2;font-size:13.5px;font-variant-numeric:tabular-nums}
+</style>
+
+<header class="bar"><div class="bar-in">
+  <a class="brand" href="#top">Eberhard Teufel</a>
+  <div class="langs" role="group" aria-label="Language">
+    <button data-l="en" aria-pressed="true">EN</button><button data-l="de" aria-pressed="false">DE</button><button data-l="id" aria-pressed="false">ID</button>
+  </div>
+  <button class="menu" id="menu" aria-expanded="false" aria-controls="toc" data-k="menu">Contents</button>
+</div></header>
+
+<div class="layout" id="top">
+<nav class="toc" id="toc" aria-label="Contents"></nav>
+<main>
+  <div class="hero">
+    <h1>Eberhard Teufel</h1>
+    <p class="lede" data-k="lede"></p>
+    <dl class="facts" id="facts"></dl>
+    <div class="hero-img"><img src="img/hero.jpg" alt="" width="1800" height="1201"></div>
+  </div>
+
+  <section id="roots">
+    <div class="sec-head"><span class="yrs">1858–1951</span><h2 data-k="t_fam"></h2></div>
+    <p class="intro" data-k="i_fam"></p>
+    <div class="fam" id="fam"></div>
+    <div class="note"><p data-k="n_fam"></p></div>
+  </section>
+
+  <div id="chapters"></div>
+
+  <section id="bali">
+    <div class="sec-head"><span class="yrs">2021 →</span><h2>Bali</h2></div>
+    <p data-k="p_bali1"></p>
+    <p class="big" data-k="q_bali"></p>
+    <p data-k="p_bali2"></p>
+    <div class="bali">
+      <figure><div class="ph"><img src="img/garden-pavilion.jpg" alt="" loading="lazy"></div></figure>
+      <figure><div class="ph"><img src="img/yellow-house.jpg" alt="" loading="lazy"></div></figure>
+      <figure><div class="ph"><img src="img/pool-dusk.jpg" alt="" loading="lazy"></div></figure>
+    </div>
+  </section>
+
+  <section id="titles">
+    <div class="sec-head"><h2 data-k="t_qual"></h2></div>
+    <p class="intro" data-k="i_qual"></p>
+    <ul class="quals" id="quals"></ul>
+  </section>
+
+  <section id="albums">
+    <div class="sec-head"><h2 data-k="t_albs"></h2></div>
+    <p class="intro" data-k="i_albs"></p>
+    <div id="albgrp"></div>
+  </section>
+
+  <section id="thoughts">
+    <div class="sec-head"><h2 data-k="t_th"></h2></div>
+    <p class="intro" data-k="i_th"></p>
+    <div class="qs" id="qs"></div>
+    <div class="name"><h3 data-k="t_name"></h3><p data-k="p_name"></p><span class="yr">1999</span></div>
+    <div class="sub" data-k="t_txt" style="margin-top:56px"></div>
+    <p class="intro" data-k="i_txt" style="margin-bottom:20px"></p>
+    <div class="docs" id="docs"></div>
+  </section>
+
+  <section id="archive">
+    <div class="sec-head"><h2 data-k="t_arch"></h2></div>
+    <p class="intro" data-k="i_arch"></p>
+    <ul class="arch" id="arch"></ul>
+  </section>
+
+  <footer><p data-k="foot"></p></footer>
+</main>
+</div>
+
+<div id="lb" role="dialog" aria-modal="true"><img alt=""><p></p><div class="bar2"><button data-a="p" aria-label="Previous">←</button><span class="ct"></span><button data-a="n" aria-label="Next">→</button><button data-a="x" aria-label="Close">✕</button></div></div>
+
+<script>
+const L=(e,d,i)=>({en:e,de:d,id:i});
+/* entry: year, then [title,text] per language, optional images [file, width, caption L] */
+const E=(y,en,de,id,img)=>({y,t:{en,de,id},img});
+const S=(img,yr,cap)=>({img,yr,cap});
+
+const UI={
+kicker:L('Aus meinem Leben','Aus meinem Leben','Aus meinem Leben'),
+lede:L('Tax adviser, auditor, painter, traveller and thinker. Born in Tuttlingen in April 1946, writing parts of his life down since 1978, living in Bali since 2021.',
+ 'Steuerberater, Wirtschaftsprüfer, Maler, Reisender und Denker. Im April 1946 in Tuttlingen geboren, schreibt seit 1978 Teile seines Lebens auf, lebt seit 2021 auf Bali.',
+ 'Konsultan pajak, auditor, pelukis, pelancong, dan pemikir. Lahir di Tuttlingen pada April 1946, menuliskan sebagian hidupnya sejak 1978, tinggal di Bali sejak 2021.'),
+t_txt:L('The full texts','Die vollständigen Texte','Teks lengkap'),
+i_txt:L('The complete text of the folders, unabridged and in the original language (German, and Mongolian for two), with every picture that sits in them: biography, training, holdings, firms and assets, poems, travel reports, dreams, and the folders of insights and thoughts. The printed book of poems and thoughts and the catalogue of paintings are shown page by page.','Der vollständige Text der Ordner in Eberhards eigenem Deutsch, ungekürzt, mit allen Bildern darin: Lebenslauf, Ausbildung, Beteiligungen und Firmen sowie die Ordner mit Erkenntnissen und Gedanken.','Teks lengkap map-map tersebut dalam bahasa Jerman asli Eberhard, tanpa dipersingkat, beserta semua gambar di dalamnya: riwayat hidup, pendidikan, kepemilikan dan perusahaan, serta map pemahaman dan pikiran.'),
+t_albs:L('Photo albums','Fotoalben','Album foto'),
+i_albs:L('All 165 albums in order, by decade. Tap an album to open every photograph in it.','Alle 165 Alben in zeitlicher Reihenfolge, nach Jahrzehnten. Ein Album antippen, um alle Fotos darin zu öffnen.','Semua 165 album berurutan, per dekade. Ketuk album untuk membuka semua foto di dalamnya.'),
+t_allph:L('All photographs','Alle Fotos','Semua foto'),
+n_orig:L('Original German text, as written.','Originaltext, wie geschrieben.','Teks asli bahasa Jerman, sebagaimana ditulis.'),
+n_ld:L('Loading…','Lädt …','Memuat…'),
+n_pics:L('Pictures in this folder','Bilder in diesem Ordner','Gambar di map ini'),
+t_fam:L('Roots','Wurzeln','Akar'),
+i_fam:L('Four generations in Tuttlingen, photographed and written down, before Eberhard’s own story begins in 1946.','Vier Generationen in Tuttlingen, fotografiert und aufgeschrieben, bevor 1946 Eberhards eigene Geschichte beginnt.','Empat generasi di Tuttlingen, difoto dan dicatat, sebelum kisah Eberhard sendiri dimulai pada 1946.'),
+n_fam:L('The name goes back to the family Teuffel von Hohenberg (1399). A family tree is documented from 1580. Eberhard has a younger brother, Dieter (born 28 December 1951), a daughter, Eva (born 1975), and a granddaughter.',
+ 'Der Name geht auf die Familie Teuffel von Hohenberg zurück (1399). Ein Stammbaum ist ab 1580 dokumentiert. Eberhard hat einen jüngeren Bruder, Dieter (geboren am 28. Dezember 1951), eine Tochter, Eva (geboren 1975), und eine Enkelin.',
+ 'Nama keluarga ini berasal dari keluarga Teuffel von Hohenberg (1399). Silsilah keluarga terdokumentasi sejak 1580. Eberhard punya adik laki-laki, Dieter (lahir 28 Desember 1951), seorang putri, Eva (lahir 1975), dan seorang cucu perempuan.'),
+sub_road:L('On the road','Unterwegs','Dalam perjalanan'),
+sub_paint:L('Paintings','Gemälde','Lukisan'),
+t_qual:L('Training, titles and honours','Ausbildung, Titel und Ehrungen','Pendidikan, gelar, dan penghargaan'),
+i_qual:L('Titles keep their official German names, with a short explanation.','Die Titel stehen mit ihrem amtlichen Namen da.','Gelar ditulis dengan nama resmi Jerman, disertai penjelasan singkat.'),
+t_th:L('Writings','Texte und Gedanken','Tulisan dan pikiran'),
+i_th:L('Since 1978 Eberhard has filled folders with handwritten insights, poems and reflections. A few lines, in his words.','Seit 1978 füllt Eberhard Ordner mit handschriftlichen Erkenntnissen, Gedichten und Gedanken. Einige Zeilen, in seinen Worten.','Sejak 1978 Eberhard mengisi map-map dengan catatan tulisan tangan: pemahaman, puisi, dan renungan. Beberapa baris, dalam kata-katanya.'),
+t_name:L('About the name','Über den Namen','Tentang nama'),
+p_name:L('“If my name were Kämpf (fighter), I would not need to fight; my name would do it for me. Since it is not, I must fight after all.”','„Wenn ich Kämpf heißen würde, dann bräuchte ich nicht zu kämpfen, dann würde dies schon mein Name erledigen. Da ich nicht Kämpf heiße, muss ich also doch kämpfen.“','“Seandainya namaku Kämpf (pejuang), aku tak perlu berjuang; namaku yang akan melakukannya. Karena bukan, aku tetap harus berjuang.”'),
+p_bali1:L('Eberhard first saw Bali in April 1996, on a trip that included his 50th birthday, and came back that November. On 8 December 2021 he arrived to stay, after a week of quarantine in Jakarta. Today he helps children and dogs in North Bali.','Eberhard sah Bali erstmals im April 1996, auf einer Reise, die seinen 50. Geburtstag einschloss, und kam im November wieder. Am 8. Dezember 2021 kam er, um zu bleiben, nach einer Woche Quarantäne in Jakarta. Heute hilft er Kindern und Hunden im Norden Balis.','Eberhard pertama kali melihat Bali pada April 1996, dalam perjalanan yang mencakup ulang tahunnya yang ke-50, dan kembali pada November tahun itu. Pada 8 Desember 2021 ia tiba untuk menetap, setelah seminggu karantina di Jakarta. Kini ia membantu anak-anak dan anjing di Bali Utara.'),
+q_bali:L('“The better alternative is probably Bali, where even death still belongs to life.”','„Die bessere Alternative ist wohl Bali, wo auch der Tod noch zum Leben gehört.“','“Alternatif yang lebih baik mungkin Bali, tempat kematian pun masih menjadi bagian dari hidup.”'),
+p_bali2:L('He wrote this in March 2022, looking back on the changes of the years before and concluding that everything has its meaning, one that often shows only late.','Das schrieb er im März 2022 mit Blick auf die Umbrüche der Jahre davor und mit dem Schluss, dass alles seinen Sinn hat, den man oft erst spät erkennt.','Ia menulis ini pada Maret 2022, menengok perubahan tahun-tahun sebelumnya, dan menyimpulkan bahwa segala sesuatu ada maknanya, yang sering baru tampak belakangan.'),
+t_arch:L('The archive','Das Archiv','Arsip'),
+i_arch:L('“Aus meinem Leben” (AmL) is Eberhard’s own collection: folders, photographs and notebooks. This site follows its structure. First provisional edition for his birthday on 29 April 2018 at Schloss Jahnsfelde, updated in 2026.','„Aus meinem Leben“ (AmL) ist Eberhards eigene Sammlung aus Ordnern, Fotografien und Heften. Diese Seite folgt ihrer Gliederung. Erste vorläufige Edition zu seinem Geburtstag am 29. April 2018 auf Schloss Jahnsfelde, aktualisiert 2026.','“Aus meinem Leben” (AmL) adalah koleksi Eberhard sendiri: map, foto, dan buku catatan. Situs ini mengikuti susunannya. Edisi pertama sementara untuk ulang tahunnya pada 29 April 2018 di Schloss Jahnsfelde, diperbarui pada 2026.'),
+foot:L('Source: Eberhard Teufel, “Aus meinem Leben”. Texts translated from the German original. Private photographs from the family archive.','Quelle: Eberhard Teufel, „Aus meinem Leben“. Private Fotografien aus dem Familienarchiv.','Sumber: Eberhard Teufel, “Aus meinem Leben”. Teks diterjemahkan dari bahasa Jerman. Foto pribadi dari arsip keluarga.'),
+facts:[[L('Born','Geboren','Lahir'),L('29 April 1946, Tuttlingen','29. April 1946, Tuttlingen','29 April 1946, Tuttlingen')],
+ [L('Profession','Beruf','Profesi'),L('Tax adviser since 1976, auditor since 1988','Steuerberater seit 1976, Wirtschaftsprüfer seit 1988','Konsultan pajak sejak 1976, auditor sejak 1988')],
+ [L('Doctorate h.c.','Ehrendoktor','Doktor kehormatan'),L('Moscow, 1992','Moskau, 1992','Moskow, 1992')],
+ [L('Home','Zuhause','Tempat tinggal'),L('Bali, since December 2021','Bali, seit Dezember 2021','Bali, sejak Desember 2021')]]
+};
+
+const CH=[
+{id:'c1946',yrs:'1946–1969',code:'AmL – ET1, Ausb, Fotos 1–3',
+ title:L('Tuttlingen','Tuttlingen','Tuttlingen'),
+ intro:L('A childhood on Moltkestraße, a bank apprenticeship, and the first journeys to Berlin, Paris and Rome.','Eine Kindheit in der Moltkestraße, eine Banklehre und die ersten Reisen nach Berlin, Paris und Rom.','Masa kecil di Moltkestraße, magang di bank, dan perjalanan pertama ke Berlin, Paris, dan Roma.'),
+ blocks:[
+ {type:'tl',entries:[
+ E('1946',['Born in Tuttlingen','Eberhard is born on 29 April 1946 at 2:30 pm in Moltkestraße 37, the elder son of Ernst and Anna Teufel. The family firm, Adam Teufel Söhne, is on the same street.'],
+   ['Geboren in Tuttlingen','Eberhard kommt am 29. April 1946 um 14.30 Uhr in der Moltkestraße 37 zur Welt, als älterer Sohn von Ernst und Anna Teufel. In derselben Straße steht der Familienbetrieb Adam Teufel Söhne.'],
+   ['Lahir di Tuttlingen','Eberhard lahir pada 29 April 1946 pukul 14.30 di Moltkestraße 37, putra sulung Ernst dan Anna Teufel. Perusahaan keluarga, Adam Teufel Söhne, berada di jalan yang sama.'],
+   [['baby-1946',700,L('Album page “Unser Eberhard”, 29 April 1946','Albumseite „Unser Eberhard“, 29. April 1946','Halaman album “Unser Eberhard”, 29 April 1946')]]),
+ E('1951',['A brother','On 28 December 1951 his brother Dieter is born. The two boys grow up together in Tuttlingen.'],
+   ['Ein Bruder','Am 28. Dezember 1951 wird sein Bruder Dieter geboren. Die beiden Jungen wachsen gemeinsam in Tuttlingen auf.'],
+   ['Seorang adik','Pada 28 Desember 1951 adiknya, Dieter, lahir. Kedua anak laki-laki itu tumbuh bersama di Tuttlingen.'],
+   [['brothers',326,L('Eberhard and Dieter','Eberhard und Dieter','Eberhard dan Dieter')]]),
+ E('1953',['School years','Volksschule in Tuttlingen from 1953, Gymnasium from 1957, then the Höhere Handelsschule (commercial school) until 1963.'],
+   ['Schulzeit','Ab 1953 Volksschule in Tuttlingen, ab 1957 Gymnasium, danach bis 1963 die Höhere Handelsschule.'],
+   ['Masa sekolah','Volksschule di Tuttlingen sejak 1953, Gymnasium sejak 1957, lalu Höhere Handelsschule (sekolah dagang) hingga 1963.'],
+   [['schultuete',284,L('First day at school, with a Schultüte','Einschulung mit Schultüte','Hari pertama sekolah, dengan Schultüte')]]),
+ E('1960',['His father builds a swimming pool','Ernst Teufel is the initiator of the Tuttlingen indoor pool. At the laying of the foundation stone the city honours him with a certificate.'],
+   ['Der Vater baut ein Hallenbad','Ernst Teufel ist der Initiator des Tuttlinger Hallenschwimmbads. Bei der Grundsteinlegung ehrt ihn die Stadt mit einer Urkunde.'],
+   ['Sang ayah membangun kolam renang','Ernst Teufel adalah pemrakarsa kolam renang dalam ruangan di Tuttlingen. Pada peletakan batu pertama, kota memberinya sertifikat penghargaan.'],
+   [['hallenbad-urkunde',207,L('Certificate for the foundation stone of the indoor pool','Urkunde zur Grundsteinlegung des Hallenbads','Sertifikat peletakan batu pertama kolam renang')]]),
+ E('1963',['Apprenticeship at the bank','From May 1963 Eberhard trains as a bank clerk at the Volksbank Tuttlingen and attends the banking class in Rottweil. He passes with the grade “good”.'],
+   ['Lehre bei der Bank','Ab Mai 1963 lernt Eberhard Bankkaufmann bei der Volksbank Tuttlingen und besucht die Bankfachklasse in Rottweil. Er besteht mit „gut“.'],
+   ['Magang di bank','Sejak Mei 1963 Eberhard belajar menjadi pegawai bank di Volksbank Tuttlingen dan mengikuti kelas perbankan di Rottweil. Ia lulus dengan nilai “baik”.']),
+ E('1966',['Towards the tax office','From May 1966 he trains under the tax representative Werner Streich. In June 1967, at 21, he receives the Bürgerbrief (citizen’s certificate) of Tuttlingen.'],
+   ['Der Weg ins Steuerbüro','Ab Mai 1966 lernt er beim Steuerbevollmächtigten Werner Streich. Im Juni 1967, mit 21, erhält er den Bürgerbrief der Stadt Tuttlingen.'],
+   ['Menuju kantor pajak','Sejak Mei 1966 ia berlatih pada kuasa pajak Werner Streich. Pada Juni 1967, di usia 21 tahun, ia menerima Bürgerbrief (surat warga) kota Tuttlingen.'])
+ ]},
+ {type:'strip',title:'sub_road',items:[
+ S('berlin-1963','1963',L('Berlin: Brandenburg Gate','Berlin: Brandenburger Tor','Berlin: Gerbang Brandenburg')),
+ S('paris','1965–68',L('Paris, several times','Paris, mehrmals','Paris, beberapa kali')),
+ S('rome','1968',L('Rome','Rom','Roma'))]}
+ ]},
+
+{id:'c1970',yrs:'1970–1979',code:'AmL – Ausb, Fir, Fotos 3–7',
+ title:L('Practice and the wider world','Kanzlei und weite Welt','Kantor dan dunia luas'),
+ intro:L('The tax practice opens, a family begins, and the titles arrive. The first big journeys lead to Mexico, Thailand, North Carolina and Egypt.','Die Kanzlei startet, eine Familie entsteht, und die Titel kommen. Die ersten großen Reisen führen nach Mexiko, Thailand, North Carolina und Ägypten.','Kantor pajak dibuka, sebuah keluarga terbentuk, dan gelar-gelar berdatangan. Perjalanan besar pertama membawanya ke Meksiko, Thailand, North Carolina, dan Mesir.'),
+ blocks:[
+ {type:'tl',entries:[
+ E('1970',['His own tax practice','In May 1970 he becomes a Steuerbevollmächtigter (tax representative). On 1 July 1970, aged 24, he takes over Werner Streich’s practice in Tuttlingen.'],
+   ['Die eigene Kanzlei','Im Mai 1970 wird er Steuerbevollmächtigter. Am 1. Juli 1970, mit 24 Jahren, übernimmt er die Steuerpraxis von Werner Streich in Tuttlingen.'],
+   ['Kantor pajak sendiri','Pada Mei 1970 ia menjadi Steuerbevollmächtigter (kuasa pajak). Pada 1 Juli 1970, di usia 24 tahun, ia mengambil alih kantor Werner Streich di Tuttlingen.']),
+ E('1972',['Wedding and Mexico','On 28 April 1972 Eberhard marries Ursula Welten. The honeymoon goes to Mexico City and Acapulco. In 1975 their daughter Eva is born.'],
+   ['Hochzeit und Mexiko','Am 28. April 1972 heiratet Eberhard Ursula Welten. Die Hochzeitsreise führt nach Mexiko-Stadt und Acapulco. 1975 wird Tochter Eva geboren.'],
+   ['Pernikahan dan Meksiko','Pada 28 April 1972 Eberhard menikah dengan Ursula Welten. Bulan madu mereka ke Kota Meksiko dan Acapulco. Pada 1975 putri mereka, Eva, lahir.'],
+   [['wedding',310,L('Wedding, 28 April 1972','Hochzeit, 28. April 1972','Pernikahan, 28 April 1972')]]),
+ E('1973',['Legal adviser','After a seminar in business administration, tax law and commercial law, Eberhard is admitted as Rechtsbeistand (legal adviser) at the Landgericht Rottweil in May 1973.'],
+   ['Rechtsbeistand','Nach einem Fachseminar in Betriebswirtschaft, Steuerrecht und Wirtschaftsrecht wird Eberhard im Mai 1973 am Landgericht Rottweil als Rechtsbeistand zugelassen.'],
+   ['Penasihat hukum','Setelah seminar ekonomi bisnis, hukum pajak, dan hukum dagang, pada Mei 1973 Eberhard diterima sebagai Rechtsbeistand (penasihat hukum) di Landgericht Rottweil.'],
+   [['steuerkongress',1000,L('Steuerkongress ’73','Steuerkongress ’73','Kongres Pajak ’73')]]),
+ E('1976',['Tax adviser and professor','In September 1976 he qualifies as Steuerberater (tax adviser). In November the Cooperating University of America names him Professor of Tax Law. In 1978 he visits the university in Selma, North Carolina.'],
+   ['Steuerberater und Professor','Im September 1976 wird er Steuerberater. Im November ernennt ihn die Cooperating University of America zum Professor of Tax Law. 1978 besucht er die Universität in Selma, North Carolina.'],
+   ['Konsultan pajak dan profesor','Pada September 1976 ia menjadi Steuerberater (konsultan pajak). Pada November, Cooperating University of America menunjuknya sebagai Professor of Tax Law. Pada 1978 ia mengunjungi universitas itu di Selma, North Carolina.'],
+   [['graduation-b',381,L('In academic robes in North Carolina, 1978','Im Talar in North Carolina, 1978','Berjubah akademik di North Carolina, 1978')]])
+ ]},
+ {type:'strip',title:'sub_road',items:[
+ S('mexico','1972',L('Mexico, honeymoon','Mexiko, Hochzeitsreise','Meksiko, bulan madu')),
+ S('thailand','1976',L('Thailand','Thailand','Thailand')),
+ S('gargano','1977',L('Gargano, Italy','Gargano, Italien','Gargano, Italia')),
+ S('graduation-a','1978',L('Selma, North Carolina','Selma, North Carolina','Selma, North Carolina')),
+ S('egypt-pyramid','1979',L('Egypt: pyramid','Ägypten: Pyramide','Mesir: piramida')),
+ S('egypt-sphinx','1979',L('Egypt: sphinx','Ägypten: Sphinx','Mesir: sphinx'))]}
+ ]},
+
+{id:'c1980',yrs:'1980–1989',code:'AmL – Fir, Fotos 6–13',
+ title:L('Lake Constance and the world','Bodensee und die Welt','Danau Constance dan dunia'),
+ intro:L('Work and home move to the shore of Lake Constance. The travelling continues: South America, Africa, Israel, New York.','Arbeit und Wohnen ziehen an den Bodensee. Das Reisen geht weiter: Südamerika, Afrika, Israel, New York.','Pekerjaan dan tempat tinggal pindah ke tepi Danau Constance. Perjalanan terus berlanjut: Amerika Selatan, Afrika, Israel, New York.'),
+ blocks:[
+ {type:'tl',entries:[
+ E('1982',['Venezuela','In April 1982 Eberhard travels to Venezuela, to Caracas and the interior. He returns over Christmas 1983 to the rivers and waterfalls of the country.'],
+   ['Venezuela','Im April 1982 reist Eberhard nach Venezuela, nach Caracas und ins Landesinnere. Zu Weihnachten 1983 kehrt er zu den Flüssen und Wasserfällen des Landes zurück.'],
+   ['Venezuela','Pada April 1982 Eberhard bepergian ke Venezuela, ke Caracas dan daerah pedalaman. Pada Natal 1983 ia kembali ke sungai dan air terjun di negeri itu.'],
+   [['venezuela',575,L('Venezuela, 1983/84','Venezuela, 1983/84','Venezuela, 1983/84')]]),
+ E('1985',['A year on the move','On 10 September 1985 his daughter Eva turns ten in Freiburg. The year takes Eberhard through California, La Palma, Spain, Greece and, at New Year, Thailand. In 1986 he spends a week fasting in complete silence.'],
+   ['Ein Jahr unterwegs','Am 10. September 1985 wird Tochter Eva in Freiburg zehn Jahre alt. Das Jahr führt Eberhard durch Kalifornien, nach La Palma, Spanien, Griechenland und zum Jahreswechsel nach Thailand. 1986 verbringt er eine Woche fastend und völlig schweigend.'],
+   ['Setahun di jalan','Pada 10 September 1985 putrinya, Eva, berusia sepuluh tahun di Freiburg. Tahun itu membawa Eberhard ke California, La Palma, Spanyol, Yunani, dan pada pergantian tahun ke Thailand. Pada 1986 ia menghabiskan seminggu berpuasa dan diam sepenuhnya.']),
+ E('1987',['Moving to Lake Constance','In 1987 he founds a Steuerberatungsgesellschaft mbH (tax advisory company). He lives in Konstanz, at Rheingasse 15, and in Überlingen on Lake Constance.'],
+   ['Umzug an den Bodensee','1987 gründet er eine Steuerberatungsgesellschaft mbH. Er lebt in Konstanz, in der Rheingasse 15, und in Überlingen am Bodensee.'],
+   ['Pindah ke Danau Constance','Pada 1987 ia mendirikan Steuerberatungsgesellschaft mbH (perusahaan konsultan pajak). Ia tinggal di Konstanz, di Rheingasse 15, dan di Überlingen di tepi Danau Constance.']),
+ E('1988',['Wirtschaftsprüfer','In May he is provisionally appointed as an auditor and in September he becomes a Wirtschaftsprüfer (public auditor). On 15 October he celebrates at the Öschberghof near Donaueschingen. In April his mother turns 70 in Überlingen.'],
+   ['Wirtschaftsprüfer','Im Mai wird er vorläufig zum Abschlussprüfer bestellt, im September wird er Wirtschaftsprüfer. Am 15. Oktober feiert er auf dem Öschberghof bei Donaueschingen. Im April wird seine Mutter in Überlingen 70.'],
+   ['Wirtschaftsprüfer','Pada Mei ia ditunjuk sementara sebagai pemeriksa laporan keuangan dan pada September ia menjadi Wirtschaftsprüfer (auditor publik). Pada 15 Oktober ia merayakannya di Öschberghof dekat Donaueschingen. Pada April ibunya berusia 70 tahun di Überlingen.'],
+   [['oeschberghof',459,L('Celebration at the Öschberghof, 15 October 1988','Feier auf dem Öschberghof, 15. Oktober 1988','Perayaan di Öschberghof, 15 Oktober 1988')],['mother70',294,L('Anna Teufel’s 70th birthday, Überlingen, April 1988','70. Geburtstag von Anna Teufel, Überlingen, April 1988','Ulang tahun ke-70 Anna Teufel, Überlingen, April 1988')]]),
+ E('1989',['Audit firm and a castle','In October 1989 he opens the audit firm Wirtschaftsconsult GmbH in Konstanz. His home that year is Schloss Seeheim, Eichhornstraße 86.'],
+   ['Prüfungsgesellschaft und ein Schloss','Im Oktober 1989 entsteht in Konstanz die Wirtschaftsconsult GmbH Wirtschaftsprüfungsgesellschaft. Sein Zuhause ist in diesem Jahr Schloss Seeheim, Eichhornstraße 86.'],
+   ['Firma audit dan sebuah kastil','Pada Oktober 1989 ia membuka firma audit Wirtschaftsconsult GmbH di Konstanz. Tempat tinggalnya tahun itu adalah Schloss Seeheim, Eichhornstraße 86.'],
+   [['seeheim',454,L('Schloss Seeheim, Konstanz','Schloss Seeheim, Konstanz','Schloss Seeheim, Konstanz')]])
+ ]},
+ {type:'strip',title:'sub_road',items:[
+ S('philippines','1981',L('Philippines: rice terraces','Philippinen: Reisterrassen','Filipina: sawah terasering')),
+ S('sicily','1981',L('Scopello, Sicily','Scopello, Sizilien','Scopello, Sisilia')),
+ S('taormina','1983',L('Taormina, Sicily','Taormina, Sizilien','Taormina, Sisilia')),
+ S('belem','1984',L('Lisbon: Belém Tower','Lissabon: Torre de Belém','Lisbon: Menara Belém')),
+ S('bigsur','1984/85',L('California: Big Sur','Kalifornien: Big Sur','California: Big Sur')),
+ S('watpho','1985/86',L('Bangkok: reclining Buddha','Bangkok: liegender Buddha','Bangkok: Buddha berbaring')),
+ S('togo','1986/87',L('Togo','Togo','Togo')),
+ S('jerusalem88','1988',L('Israel: Jerusalem','Israel: Jerusalem','Israel: Yerusalem')),
+ S('newyork','1988',L('New York','New York','New York')),
+ S('salzburg','1989',L('Salzburg','Salzburg','Salzburg'))]}
+ ]},
+
+{id:'c1990',yrs:'1990–1999',code:'AmL – Fir, Fotos 13–20',
+ title:L('Berlin, Moscow and the brush','Berlin, Moskau und der Pinsel','Berlin, Moskow, dan kuas'),
+ intro:L('A tax office in Berlin after the Wall, an honorary doctorate from Moscow, a first painting course and many new places. In 1996 he sees Bali for the first time.','Ein Steuerbüro in Berlin nach dem Mauerfall, eine Ehrendoktorwürde aus Moskau, ein erster Malkurs und viele neue Orte. 1996 sieht er zum ersten Mal Bali.','Kantor pajak di Berlin setelah runtuhnya Tembok, gelar doktor kehormatan dari Moskow, kursus melukis pertama, dan banyak tempat baru. Pada 1996 ia pertama kali melihat Bali.'),
+ blocks:[
+ {type:'tl',entries:[
+ E('1990',['A second office in Berlin','In July 1990 he opens a tax office at Oranienburger Straße 34 in Berlin, while the office at Moltkestraße 41 in Tuttlingen keeps running. A sticker from those years reads “Der Chef spinnt!” (The boss is nuts!).'],
+   ['Ein zweites Büro in Berlin','Im Juli 1990 eröffnet er ein Steuerbüro in der Oranienburger Straße 34 in Berlin, während die Kanzlei in der Moltkestraße 41 in Tuttlingen weiterläuft. Ein Aufkleber aus jenen Jahren lautet „Der Chef spinnt!“.'],
+   ['Kantor kedua di Berlin','Pada Juli 1990 ia membuka kantor pajak di Oranienburger Straße 34, Berlin, sementara kantor di Moltkestraße 41, Tuttlingen, tetap berjalan. Sebuah stiker dari masa itu berbunyi “Der Chef spinnt!” (Bosnya gila!).'],
+   [['berlin-office',400,L('Oranienburger Straße, Berlin','Oranienburger Straße, Berlin','Oranienburger Straße, Berlin')]]),
+ E('1992',['Moscow and Siberia','In May 1992 the Russian Ministry of Education in Moscow awards him a doctorate of philosophy honoris causa. In July and August he travels through Russia, from Moscow into Siberia. On 3 July the Tuttlingen office on Moltkestraße 41 moves out, and Berlin becomes his base.'],
+   ['Moskau und Sibirien','Im Mai 1992 verleiht ihm das Bildungsministerium der Russischen Föderation in Moskau die Ehrendoktorwürde der Philosophie. Im Juli und August reist er durch Russland, von Moskau bis nach Sibirien. Am 3. Juli zieht das Tuttlinger Büro in der Moltkestraße 41 aus, und Berlin wird sein Standort.'],
+   ['Moskow dan Siberia','Pada Mei 1992 Kementerian Pendidikan Rusia di Moskow memberinya gelar doktor filsafat kehormatan. Pada Juli dan Agustus ia bepergian melintasi Rusia, dari Moskow hingga Siberia. Pada 3 Juli kantor di Moltkestraße 41, Tuttlingen, pindah, dan Berlin menjadi basisnya.'],
+   [['train',493,L('The train sign reads Moscow–Vladivostok','Das Zugschild: Moskau–Wladiwostok','Papan kereta: Moskow–Vladivostok')]]),
+ E('1993',['A first painting course','In May 1993 he takes his first Malkurs (painting course) in Cannobio on Lake Maggiore. More follow in Italy: 1994, Lake Trasimeno in 1995, Siena in 1996, Cortona in 1997.'],
+   ['Der erste Malkurs','Im Mai 1993 besucht er seinen ersten Malkurs in Cannobio am Lago Maggiore. Weitere folgen in Italien: 1994, 1995 am Trasimenischen See, 1996 in Siena, 1997 in Cortona.'],
+   ['Kursus melukis pertama','Pada Mei 1993 ia mengikuti kursus melukis (Malkurs) pertamanya di Cannobio, Danau Maggiore. Lebih banyak menyusul di Italia: 1994, Danau Trasimeno pada 1995, Siena pada 1996, Cortona pada 1997.']),
+ E('1993',['Honours, and Israel','On 3 October 1993 he receives the Bismarck Commemorative Medal in Silver at Friedrichsruh, and the same year a gold medal of honour from the Akademie für die Wissenschaft des Judentums in Berlin. Journeys to Israel in April and November 1993 and April 1994 lead to Ein Gedi on the Dead Sea, Jerusalem and Yad Vashem.'],
+   ['Ehrungen und Israel','Am 3. Oktober 1993 erhält er in Friedrichsruh die Bismarck-Erinnerungsmedaille in Silber, im selben Jahr die Ehrenmedaille in Gold der Akademie für die Wissenschaft des Judentums in Berlin. Reisen nach Israel im April und November 1993 und im April 1994 führen nach Ein Gedi am Toten Meer, nach Jerusalem und nach Yad Vashem.'],
+   ['Penghargaan, dan Israel','Pada 3 Oktober 1993 ia menerima Medali Kenangan Bismarck perak di Friedrichsruh, dan pada tahun yang sama medali kehormatan emas dari Akademie für die Wissenschaft des Judentums di Berlin. Perjalanan ke Israel pada April dan November 1993 serta April 1994 membawanya ke Ein Gedi di Laut Mati, Yerusalem, dan Yad Vashem.'],
+   [['israel-dome',455,L('Jerusalem: the Dome of the Rock','Jerusalem: der Felsendom','Yerusalem: Kubah Batu')],['israel-wall',446,L('Jerusalem: the Western Wall','Jerusalem: die Klagemauer','Yerusalem: Tembok Barat')]]),
+ E('1995',['The wrapped Reichstag','In summer 1995 the Reichstag in Berlin is wrapped in fabric, and Eberhard is among the visitors. On 3 October he is back at Friedrichsruh for the Bismarck medal. From November a dog named Emmy appears in his photographs.'],
+   ['Der verhüllte Reichstag','Im Sommer 1995 wird der Berliner Reichstag verhüllt, und Eberhard ist unter den Besuchern. Am 3. Oktober ist er wieder in Friedrichsruh, wegen der Bismarck-Medaille. Ab November taucht auf seinen Fotos ein Hund namens Emmy auf.'],
+   ['Reichstag yang dibungkus','Pada musim panas 1995 gedung Reichstag di Berlin dibungkus kain, dan Eberhard ada di antara para pengunjung. Pada 3 Oktober ia kembali ke Friedrichsruh untuk medali Bismarck. Mulai November seekor anjing bernama Emmy muncul dalam foto-fotonya.'],
+   [['reichstag',439,L('Berlin, 1995','Berlin, 1995','Berlin, 1995')],['emmy',302,L('Emmy, winter 1995','Emmy, Winter 1995','Emmy, musim dingin 1995')]]),
+ E('1996',['Brazil, and Bali for the first time','In January 1996 he travels to Brazil (Rio de Janeiro, Iguazu Falls). From 13 April to 2 May he is in Bali, where he celebrates his 50th birthday, and he returns from 18 November to 4 December.'],
+   ['Brasilien, und zum ersten Mal Bali','Im Januar 1996 reist er nach Brasilien (Rio de Janeiro, Iguazú-Wasserfälle). Vom 13. April bis 2. Mai ist er auf Bali und feiert dort seinen 50. Geburtstag; vom 18. November bis 4. Dezember kehrt er zurück.'],
+   ['Brasil, dan pertama kali ke Bali','Pada Januari 1996 ia bepergian ke Brasil (Rio de Janeiro, Air Terjun Iguazu). Dari 13 April hingga 2 Mei ia berada di Bali dan merayakan ulang tahunnya yang ke-50 di sana; ia kembali dari 18 November hingga 4 Desember.'],
+   [['bali96-sunset',496,L('Bali, 1996','Bali, 1996','Bali, 1996')]]),
+ E('1997',['Cortona','In July 1997 he joins a painting course in Cortona, Tuscany. The photographs show a gallery hall hung with canvases.'],
+   ['Cortona','Im Juli 1997 nimmt er an einem Malkurs in Cortona in der Toskana teil. Die Fotos zeigen einen Galerieraum voller Leinwände.'],
+   ['Cortona','Pada Juli 1997 ia mengikuti kursus melukis di Cortona, Toskana. Foto-fotonya memperlihatkan sebuah ruang galeri yang penuh kanvas.'],
+   [['cortona-expo',499,L('Cortona, 1997','Cortona, 1997','Cortona, 1997')]]),
+ E('1997',['Under the microscope','From November 1997 into 1998 the albums fill with micro photographs: glowing abstract colour images in orange, green and magenta.'],
+   ['Unter dem Mikroskop','Ab November 1997 bis 1998 füllen sich die Alben mit Mikrofotos: leuchtende, abstrakte Farbbilder in Orange, Grün und Magenta.'],
+   ['Di bawah mikroskop','Sejak November 1997 hingga 1998 album-albumnya dipenuhi foto mikro: citra abstrak berpendar dalam warna oranye, hijau, dan magenta.'],
+   [['micro-1',460,L('Micro photograph, 1997/98','Mikrofoto, 1997/98','Foto mikro, 1997/98')],['micro-2',497,L('Micro photograph, 1997/98','Mikrofoto, 1997/98','Foto mikro, 1997/98')],['micro-3',494,L('Micro photograph, 1997/98','Mikrofoto, 1997/98','Foto mikro, 1997/98')]]),
+ E('1998',['Thailand, and a head in clay','In January 1998 Eberhard is in Thailand, among temples and old stone ruins. The albums for 1998 and 1999 also show a portrait head of him modelled in clay.'],
+   ['Thailand und ein Kopf aus Ton','Im Januar 1998 ist Eberhard in Thailand, zwischen Tempeln und alten Steinruinen. Die Alben für 1998 und 1999 zeigen außerdem einen Porträtkopf von ihm, aus Ton modelliert.'],
+   ['Thailand, dan sebuah kepala dari tanah liat','Pada Januari 1998 Eberhard berada di Thailand, di antara kuil dan reruntuhan batu kuno. Album 1998 dan 1999 juga memperlihatkan kepala potret dirinya dari tanah liat.'],
+   [['bust',230,L('Portrait head in clay','Porträtkopf aus Ton','Kepala potret dari tanah liat')],['phimai',567,L('Thailand, January 1998','Thailand, Januar 1998','Thailand, Januari 1998')]])
+ ]},
+ {type:'strip',title:'sub_paint',cls:'paint',items:[
+ S('p-blue-flower','',L('Blue flower','Blaue Blume','Bunga biru')),
+ S('p-figure','',L('Figure in orange and green','Figur in Orange und Grün','Sosok oranye dan hijau')),
+ S('p-eye','',L('Eye','Auge','Mata')),
+ S('p-blue','',L('Blue','Blau','Biru')),
+ S('p-red-flower','',L('Red flower','Rote Blume','Bunga merah')),
+ S('p-galaxy','',L('Swirl','Wirbel','Pusaran')),
+ S('p-colors','',L('Colour study','Farbstudie','Studi warna')),
+ S('p-sun','',L('Blue sun','Blaue Sonne','Matahari biru')),
+ S('p-face','',L('Face','Gesicht','Wajah')),
+ S('p-pink','',L('Pink burst','Rosa Explosion','Ledakan merah muda')),
+ S('p-tree','',L('Tree of faces','Baum der Gesichter','Pohon wajah')),
+ S('p-fish','',L('Red fish','Roter Fisch','Ikan merah')),
+ S('p-cosmos','',L('Cosmos','Kosmos','Kosmos')),
+ S('p-sunflowers','',L('Sunflowers','Sonnenblumen','Bunga matahari')),
+ S('p-lilies','',L('Water lilies','Seerosen','Teratai')),
+ S('clay-head','',L('Clay head','Tonkopf','Kepala tanah liat'))]},
+ {type:'strip',title:'sub_road',items:[
+ S('vieste','1990',L('Vieste, Italy','Vieste, Italien','Vieste, Italia')),
+ S('srilanka','1991',L('Sri Lanka','Sri Lanka','Sri Lanka')),
+ S('safrica','1991/92',L('South Africa','Südafrika','Afrika Selatan')),
+ S('moscow-univ','1992',L('Moscow','Moskau','Moskow')),
+ S('disney','1994',L('Disneyland Paris','Disneyland Paris','Disneyland Paris')),
+ S('haiti','1994/95',L('Dominican Republic and Haiti','Dominikanische Republik und Haiti','Republik Dominika dan Haiti')),
+ S('turkey-dam','1995',L('Turkey: a dam visit','Türkei: Besuch eines Staudamms','Turki: kunjungan ke bendungan')),
+ S('brazil-christ','1996',L('Rio de Janeiro','Rio de Janeiro','Rio de Janeiro')),
+ S('iguazu','1996',L('Iguazu Falls','Iguazú-Wasserfälle','Air Terjun Iguazu')),
+ S('bali96-fountains','1996',L('Bali','Bali','Bali')),
+ S('bali96-bay','1996',L('Bali: a bay','Bali: eine Bucht','Bali: sebuah teluk')),
+ S('cortona','1997',L('Cortona, Tuscany','Cortona, Toskana','Cortona, Toskana'))]}
+ ]},
+
+{id:'c2000',yrs:'2000–2009',code:'AmL – Fotos 21–37, ErkGed 3–5',
+ title:L('New centuries, new places','Neues Jahrhundert, neue Orte','Abad baru, tempat baru'),
+ intro:L('Cuba at the turn of the millennium, painting courses in Morocco, journeys to China, and more and more writing: stock-takes in 2004 and 2017, and a birthday in a castle.','Kuba zur Jahrtausendwende, Malkurse in Marokko, Reisen nach China und immer mehr Schreiben: Zwischenbilanzen 2004 und 2017 und ein Geburtstag auf einem Schloss.','Kuba di pergantian milenium, kursus melukis di Maroko, perjalanan ke Tiongkok, dan semakin banyak menulis: tinjauan hidup pada 2004 dan 2017, dan pesta ulang tahun di sebuah kastil.'),
+ blocks:[{type:'tl',entries:[
+ E('2000',['A book for the new millennium','In January 2000 Eberhard travels to Cuba. In Santiago he writes the preface to a book that takes stock of his life, and an essay called “tempus erectus”: as people once gave up the flat earth, time should rise from a disc into a sphere, into variety and infinity.'],
+   ['Ein Buch zur Jahrtausendwende','Im Januar 2000 reist Eberhard nach Kuba. In Santiago schreibt er das Vorwort zu einem Buch, das Bilanz zieht, und einen Text namens „tempus erectus“: So wie man die flache Erde aufgab, soll sich die Zeit von der Scheibe zur Kugel erheben, in Vielfalt und Unendlichkeit.'],
+   ['Sebuah buku untuk milenium baru','Pada Januari 2000 Eberhard bepergian ke Kuba. Di Santiago ia menulis kata pengantar untuk sebuah buku yang meninjau hidupnya, dan esai berjudul “tempus erectus”: seperti manusia dulu meninggalkan bumi datar, waktu pun hendaknya naik dari piringan menjadi bola, menuju keragaman dan ketakterhinggaan.']),
+ E('2001',['Egypt and a jubilee','In April 2001 Eberhard visits Egypt. On 14 to 16 September 2001 his tax advisory company STBT celebrates a jubilee, with events at Mainau, Überlingen, Konstanz, Zürich and Meersburg.'],
+   ['Ägypten und ein Jubiläum','Im April 2001 besucht Eberhard Ägypten. Vom 14. bis 16. September 2001 feiert seine Steuerberatungsgesellschaft STBT ein Jubiläum, mit Veranstaltungen auf der Mainau, in Überlingen, Konstanz, Zürich und Meersburg.'],
+   ['Mesir dan sebuah jubileum','Pada April 2001 Eberhard mengunjungi Mesir. Pada 14 sampai 16 September 2001 perusahaan konsultan pajaknya, STBT, merayakan jubileum dengan acara di Mainau, Überlingen, Konstanz, Zürich, dan Meersburg.'],
+   [['egypt-2001',460,L('Egypt, April 2001','Ägypten, April 2001','Mesir, April 2001')]]),
+ E('2002',['Falls, lakes and Morocco','In spring 2002 he travels to Schaffhausen and Lake Lugano, in July to Monte Carlo, in August to the North Sea coast. In October he joins a painting course in Marrakech led by Heinz Rakowitz.'],
+   ['Wasserfall, Seen und Marokko','Im Frühjahr 2002 reist er nach Schaffhausen und an den Luganer See, im Juli nach Monte Carlo, im August an die Nordseeküste. Im Oktober nimmt er an einem Malkurs in Marrakesch unter Heinz Rakowitz teil.'],
+   ['Air terjun, danau, dan Maroko','Pada musim semi 2002 ia bepergian ke Schaffhausen dan Danau Lugano, pada Juli ke Monte Carlo, pada Agustus ke pesisir Laut Utara. Pada Oktober ia mengikuti kursus melukis di Marrakech yang dipimpin Heinz Rakowitz.'],
+   [['rhine-falls',495,L('The Rhine Falls near Schaffhausen','Der Rheinfall bei Schaffhausen','Air Terjun Rhein dekat Schaffhausen')],['morocco-1',417,L('Morocco, 2002','Marokko, 2002','Maroko, 2002')]]),
+ E('2003',['Thailand and Morocco again','Over New Year 2002/03 he visits the Phi Phi Islands in Thailand. In October 2003 a second painting course in Marrakech follows, and in January 2004 he travels to Phuket.'],
+   ['Wieder Thailand und Marokko','Zum Jahreswechsel 2002/03 besucht er die Phi-Phi-Inseln in Thailand. Im Oktober 2003 folgt ein zweiter Malkurs in Marrakesch, im Januar 2004 reist er nach Phuket.'],
+   ['Thailand dan Maroko lagi','Pada pergantian tahun 2002/03 ia mengunjungi Kepulauan Phi Phi di Thailand. Pada Oktober 2003 menyusul kursus melukis kedua di Marrakech, dan pada Januari 2004 ia pergi ke Phuket.'],
+   [['morocco-2',355,L('Morocco, 2003','Marokko, 2003','Maroko, 2003')]]),
+ E('2004',['Stock-take at 58','On 30 June 2004 he asks where he stands after 58 years of life and 34 years of tax practice, and answers that he lives in “freedom”. In September he writes: “Life is the journey to oneself.”'],
+   ['Zwischenbilanz mit 58','Am 30. Juni 2004 fragt er, wo er nach 58 Jahren Leben und 34 Jahren Steuerbüro steht, und antwortet, er lebe in „Freiheit“. Im September schreibt er: „Das Leben ist die Reise zu sich selbst!“'],
+   ['Tinjauan di usia 58','Pada 30 Juni 2004 ia bertanya di mana posisinya setelah 58 tahun hidup dan 34 tahun praktik pajak, lalu menjawab bahwa ia hidup dalam “kebebasan”. Pada September ia menulis: “Hidup adalah perjalanan menuju diri sendiri.”']),
+ E('2005',['China, again and again','In September 2005 Eberhard travels to Shanghai and Beijing. In 2006 he is in China three more times: in March (Beijing, Tianjin), in May (Beijing, Guangzhou) and in July and August (Beijing and Shanghai). In July Chinese guests visit him in Konstanz, and in April the album records an evening at the China Club in the Adlon hotel in Berlin.'],
+   ['China, immer wieder','Im September 2005 reist Eberhard nach Shanghai und Peking. 2006 ist er noch dreimal in China: im März (Peking, Tianjin), im Mai (Peking, Guangzhou) sowie im Juli und August (Peking und Shanghai). Im Juli besuchen ihn chinesische Gäste in Konstanz, und im April hält das Album einen Abend im China Club im Berliner Adlon fest.'],
+   ['Tiongkok, berulang kali','Pada September 2005 Eberhard bepergian ke Shanghai dan Beijing. Pada 2006 ia ke Tiongkok tiga kali lagi: Maret (Beijing, Tianjin), Mei (Beijing, Guangzhou), serta Juli dan Agustus (Beijing dan Shanghai). Pada Juli tamu-tamu dari Tiongkok mengunjunginya di Konstanz, dan pada April album mencatat sebuah malam di China Club di hotel Adlon, Berlin.'],
+   [['shanghai',454,L('Shanghai, 2005','Shanghai, 2005','Shanghai, 2005')],['shanghai-2006',454,L('Shanghai, August 2006','Shanghai, August 2006','Shanghai, Agustus 2006')]]),
+ E('2006',['Sixty on Lake Constance','In April 2006 Eberhard celebrates his 60th birthday on Lake Constance.'],
+   ['Sechzig am Bodensee','Im April 2006 feiert Eberhard seinen 60. Geburtstag am Bodensee.'],
+   ['Enam puluh di Danau Constance','Pada April 2006 Eberhard merayakan ulang tahunnya yang ke-60 di Danau Constance.']),
+ E('2006',['A painter, and a farewell','In September 2006 Eberhard visits the painter Willi Sitte in Halle, whom he first met in 1995. On 26 November 2006 his father, Ernst Teufel, dies in Tuttlingen, aged 94.'],
+   ['Ein Maler, und ein Abschied','Im September 2006 besucht Eberhard den Maler Willi Sitte in Halle, den er 1995 kennengelernt hat. Am 26. November 2006 stirbt sein Vater Ernst Teufel in Tuttlingen, mit 94 Jahren.'],
+   ['Seorang pelukis, dan perpisahan','Pada September 2006 Eberhard mengunjungi pelukis Willi Sitte di Halle, yang pertama kali ia temui pada 1995. Pada 26 November 2006 ayahnya, Ernst Teufel, meninggal di Tuttlingen pada usia 94 tahun.']),
+ E('2007',['Ethiopia, Berlin, Monaco, Mongolia','In January 2007 he travels to Ethiopia, in March to Tenerife. In Berlin he watches the demolition of the Palast der Republik. In May he is in Nice and Monte Carlo, and in June in Mongolia.'],
+   ['Äthiopien, Berlin, Monaco, Mongolei','Im Januar 2007 reist er nach Äthiopien, im März nach Teneriffa. In Berlin sieht er dem Abriss des Palasts der Republik zu. Im Mai ist er in Nizza und Monte Carlo, im Juni in der Mongolei.'],
+   ['Etiopia, Berlin, Monako, Mongolia','Pada Januari 2007 ia bepergian ke Etiopia, pada Maret ke Tenerife. Di Berlin ia menyaksikan pembongkaran Palast der Republik. Pada Mei ia berada di Nice dan Monte Carlo, dan pada Juni di Mongolia.'],
+   [['palast',900,L('Berlin, March 2007: the Palast der Republik being demolished','Berlin, März 2007: der Abriss des Palasts der Republik','Berlin, Maret 2007: pembongkaran Palast der Republik')]]),
+ E('2008',['Rwanda, Berlin and the Emirates','In 2008 Eberhard travels to Rwanda three times, in June, July and September. Earlier that year come La Réunion in January, Chinese New Year in Berlin in February and Thailand in April and May. In August he is in Berlin and Konstanz (the album mentions a Chinese exhibition and the Olympic Games), and on 2 December in Berlin with a trip to the United Arab Emirates. He sees in the new year in Konstanz.'],
+   ['Ruanda, Berlin und die Emirate','2008 reist Eberhard dreimal nach Ruanda: im Juni, Juli und September. Davor folgen La Réunion im Januar, das chinesische Neujahr in Berlin im Februar und Thailand im April und Mai. Im August ist er in Berlin und Konstanz (das Album nennt eine China-Ausstellung und die Olympischen Spiele), am 2. Dezember in Berlin mit einer Reise in die Vereinigten Arabischen Emirate. Den Jahreswechsel feiert er in Konstanz.'],
+   ['Rwanda, Berlin, dan Emirat','Pada 2008 Eberhard tiga kali bepergian ke Rwanda: Juni, Juli, dan September. Sebelumnya ada La Réunion pada Januari, Tahun Baru Imlek di Berlin pada Februari, dan Thailand pada April dan Mei. Pada Agustus ia di Berlin dan Konstanz (album menyebut pameran Tiongkok dan Olimpiade), dan pada 2 Desember di Berlin dengan perjalanan ke Uni Emirat Arab. Tahun baru dirayakan di Konstanz.']),
+ E('2009',['China, Thailand and Mongolia','The year begins in Thailand. In March he is in China, in Beijing and Changsha, and in April in Berlin and Konstanz. In August he returns to Thailand. In September a China journey leads from Hangzhou to Beijing and on to Ulaanbaatar in Mongolia. October to December pass in Berlin, Friedrichsberg, Tuttlingen and Konstanz, and the year ends in Thailand, in Bangkok and Hua Hin.'],
+   ['China, Thailand und die Mongolei','Das Jahr beginnt in Thailand. Im März ist er in China, in Peking und Changsha, im April in Berlin und Konstanz. Im August kehrt er nach Thailand zurück. Im September führt eine Chinareise von Hangzhou nach Peking und weiter nach Ulaanbaatar in der Mongolei. Oktober bis Dezember vergehen in Berlin, Friedrichsberg, Tuttlingen und Konstanz, und das Jahr endet in Thailand, in Bangkok und Hua Hin.'],
+   ['Tiongkok, Thailand, dan Mongolia','Tahun dimulai di Thailand. Pada Maret ia di Tiongkok, di Beijing dan Changsha, dan pada April di Berlin dan Konstanz. Pada Agustus ia kembali ke Thailand. Pada September perjalanan ke Tiongkok membawanya dari Hangzhou ke Beijing lalu ke Ulaanbaatar di Mongolia. Oktober sampai Desember berlalu di Berlin, Friedrichsberg, Tuttlingen, dan Konstanz, dan tahun berakhir di Thailand, di Bangkok dan Hua Hin.'])
+ ]},
+ {type:'strip',title:'sub_road',items:[
+ S('ethiopia-sunset','2007',L('Ethiopia','Äthiopien','Etiopia')),
+ S('ethiopia-donkeys','2007',L('Ethiopia: donkeys','Äthiopien: Esel','Etiopia: keledai')),
+ S('montecarlo','2007',L('Monte Carlo','Monte Carlo','Monte Carlo')),
+ S('mongolia-statue','2007',L('Mongolia: a monument on the steppe','Mongolei: ein Denkmal in der Steppe','Mongolia: sebuah monumen di stepa')),
+ S('mongolia-steppe','2007',L('Mongolia, June 2007','Mongolei, Juni 2007','Mongolia, Juni 2007'))]}
+ ]},
+{id:'c2010',yrs:'2010–2020',code:'',
+ title:L('Later years','Die späteren Jahre','Tahun-tahun belakangan'),
+ intro:L('Journeys continue into 2010, then stock-takes at seventy and a birthday at Schloss Jahnsfelde.','Die Reisen gehen 2010 weiter, dann folgen Zwischenbilanzen mit siebzig und ein Geburtstag auf Schloss Jahnsfelde.','Perjalanan berlanjut hingga 2010, lalu tinjauan hidup di usia tujuh puluh dan ulang tahun di Schloss Jahnsfelde.'),
+ blocks:[{type:'tl',entries:[
+ E('2010',['Beijing, Mongolia and Bali','In January 2010 Eberhard is in Beijing and Berlin, then in Thailand, in Pattaya. February is Berlin, with Chinese New Year, and Konstanz. In March he travels to Mongolia and in April to Bali. At the end of April and in May he is in Friedrichsberg, Berlin and Konstanz, where he celebrates his birthday.'],
+   ['Peking, Mongolei und Bali','Im Januar 2010 ist Eberhard in Peking und Berlin, dann in Thailand, in Pattaya. Der Februar gehört Berlin, mit dem chinesischen Neujahr, und Konstanz. Im März reist er in die Mongolei, im April nach Bali. Ende April und im Mai ist er in Friedrichsberg, Berlin und Konstanz, wo er seinen Geburtstag feiert.'],
+   ['Beijing, Mongolia, dan Bali','Pada Januari 2010 Eberhard di Beijing dan Berlin, lalu di Thailand, di Pattaya. Februari di Berlin, dengan Tahun Baru Imlek, dan Konstanz. Pada Maret ia bepergian ke Mongolia dan pada April ke Bali. Akhir April dan Mei ia di Friedrichsberg, Berlin, dan Konstanz, tempat ia merayakan ulang tahun.']),
+E('2010',['Sardinia, Malaysia and Hainan','After the spring, June is Berlin and July Konstanz. In August he visits Sardinia and Corsica. In October he is in Berlin (the album mentions the Mongolian president) and on Langkawi in Malaysia, in November in Konstanz, Berlin and Tuttlingen, and in December in China, on the island of Hainan, before Berlin again.'],
+   ['Sardinien, Malaysia und Hainan','Nach dem Frühjahr ist der Juni Berlin und der Juli Konstanz. Im August besucht er Sardinien und Korsika. Im Oktober ist er in Berlin (das Album nennt den mongolischen Präsidenten) und auf Langkawi in Malaysia, im November in Konstanz, Berlin und Tuttlingen, im Dezember in China, auf der Insel Hainan, danach wieder in Berlin.'],
+   ['Sardinia, Malaysia, dan Hainan','Setelah musim semi, Juni di Berlin dan Juli di Konstanz. Pada Agustus ia mengunjungi Sardinia dan Korsika. Pada Oktober ia di Berlin (album menyebut presiden Mongolia) dan di Langkawi, Malaysia, pada November di Konstanz, Berlin, dan Tuttlingen, dan pada Desember di Tiongkok, di pulau Hainan, sebelum kembali ke Berlin.']),
+ E('2011',['China and a flat sold','The year is full of China: Beijing and Hainan in January, Beijing in April, May and September. On 18 July 2011, at a notary appointment, he sells the flat in Gebertingen in Switzerland. Summer takes him through Berlin, Friedrichsberg, Konstanz and Monte Carlo, autumn through Berlin, Potsdam, Konstanz and Tuttlingen, and Christmas is spent between Berlin, Konstanz and Tuttlingen.'],
+   ['China und eine verkaufte Wohnung','Das Jahr ist voller China: Peking und Hainan im Januar, Peking im April, Mai und September. Am 18. Juli 2011 verkauft er bei einem Notartermin die Wohnung in Gebertingen in der Schweiz. Der Sommer führt über Berlin, Friedrichsberg, Konstanz und Monte Carlo, der Herbst über Berlin, Potsdam, Konstanz und Tuttlingen, Weihnachten verbringt er zwischen Berlin, Konstanz und Tuttlingen.'],
+   ['Tiongkok dan sebuah apartemen terjual','Tahun ini penuh Tiongkok: Beijing dan Hainan pada Januari, Beijing pada April, Mei, dan September. Pada 18 Juli 2011, dalam pertemuan di notaris, ia menjual apartemen di Gebertingen, Swiss. Musim panas membawanya lewat Berlin, Friedrichsberg, Konstanz, dan Monte Carlo, musim gugur lewat Berlin, Potsdam, Konstanz, dan Tuttlingen, dan Natal dihabiskan antara Berlin, Konstanz, dan Tuttlingen.']),
+ E('2012',['Hong Kong, Berlinale and a birthday','The year opens in Thailand, with Hong Kong, Macao and Shenzhen on the way. In February he is in Friedrichsberg and Berlin, where the album notes the Berlinale film festival, in March in Thailand and China, and in April and May between Berlin, Konstanz, Friedrichsberg and Beijing. He celebrates his birthday on 29 April in Friedrichsberg. Summer brings Schloss Blumenfeld and the Rhine Falls, and in August Berlin, Potsdam and Ischia in Italy.'],
+   ['Hongkong, Berlinale und ein Geburtstag','Das Jahr beginnt in Thailand, mit Hongkong, Macao und Shenzhen auf dem Weg. Im Februar ist er in Friedrichsberg und Berlin, wo das Album die Berlinale vermerkt, im März in Thailand und China, im April und Mai zwischen Berlin, Konstanz, Friedrichsberg und Peking. Seinen Geburtstag feiert er am 29. April in Friedrichsberg. Der Sommer bringt Schloss Blumenfeld und den Rheinfall, im August Berlin, Potsdam und Ischia in Italien.'],
+   ['Hong Kong, Berlinale, dan ulang tahun','Tahun dibuka di Thailand, dengan Hong Kong, Makau, dan Shenzhen di perjalanan. Pada Februari ia di Friedrichsberg dan Berlin, tempat album mencatat festival film Berlinale, pada Maret di Thailand dan Tiongkok, dan pada April dan Mei antara Berlin, Konstanz, Friedrichsberg, dan Beijing. Ia merayakan ulang tahun pada 29 April di Friedrichsberg. Musim panas membawa Schloss Blumenfeld dan Air Terjun Rhein, dan pada Agustus Berlin, Potsdam, dan Ischia di Italia.']),
+  E('2013',['Bali, Rwanda and Croatia','Late 2012 brings China again, to Beijing. In January 2013 he is in Bali, in Banjar, and from February to April between Berlin, Konstanz, Vienna and Ulm. In April he is on Hainan in China. In May and June he travels to Monte Carlo, Venice and Croatia, and in October to Kigali in Rwanda for the fourth time, where the album mentions the sale of a plot of land. On 14 December he sets off for six weeks in Bali and Thailand.'],
+   ['Bali, Ruanda und Kroatien','Ende 2012 geht es wieder nach China, nach Peking. Im Januar 2013 ist er auf Bali, in Banjar, und von Februar bis April zwischen Berlin, Konstanz, Wien und Ulm. Im April ist er auf Hainan in China. Im Mai und Juni reist er nach Monte Carlo, Venedig und Kroatien, im Oktober zum vierten Mal nach Kigali in Ruanda, wo das Album den Verkauf eines Grundstücks erwähnt. Am 14. Dezember bricht er zu sechs Wochen auf Bali und in Thailand auf.'],
+   ['Bali, Rwanda, dan Kroasia','Akhir 2012 membawanya lagi ke Tiongkok, ke Beijing. Pada Januari 2013 ia di Bali, di Banjar, dan dari Februari sampai April antara Berlin, Konstanz, Wina, dan Ulm. Pada April ia di Hainan, Tiongkok. Pada Mei dan Juni ia bepergian ke Monte Carlo, Venesia, dan Kroasia, dan pada Oktober ke Kigali, Rwanda, untuk keempat kalinya, tempat album menyebut penjualan sebidang tanah. Pada 14 Desember ia berangkat untuk enam minggu di Bali dan Thailand.']),
+ E('2014',['China, the Costa del Sol and Bali','The Bali and Thailand journey runs until the end of January 2014. February and March bring China and Konstanz. From 28 April to 3 May he is on the Costa del Sol, in Marbella. In late July and early August he visits Santa Margherita Ligure in Italy, and from 22 to 27 August Beidaihe in China. On 9 December he leaves for almost a month in Bali.'],
+   ['China, Costa del Sol und Bali','Die Reise nach Bali und Thailand dauert bis Ende Januar 2014. Februar und März bringen China und Konstanz. Vom 28. April bis 3. Mai ist er an der Costa del Sol, in Marbella. Ende Juli und Anfang August besucht er Santa Margherita Ligure in Italien, vom 22. bis 27. August Beidaihe in China. Am 9. Dezember bricht er zu fast einem Monat auf Bali auf.'],
+   ['Tiongkok, Costa del Sol, dan Bali','Perjalanan ke Bali dan Thailand berlangsung hingga akhir Januari 2014. Februari dan Maret membawa Tiongkok dan Konstanz. Dari 28 April sampai 3 Mei ia di Costa del Sol, di Marbella. Akhir Juli dan awal Agustus ia mengunjungi Santa Margherita Ligure di Italia, dan dari 22 sampai 27 Agustus Beidaihe di Tiongkok. Pada 9 Desember ia berangkat untuk hampir sebulan di Bali.']),
+ E('2015',['Thailand, a jubilee and a painting course','From 9 January to 4 February 2015 he is in Thailand. In April he is in Berlin, Ferch and Heiligendamm, in May in Berlin, Friedrichsberg, Konstanz and on the island of Mainau, and in June he marks the 25-year jubilee of his tax advisory firm STBT. In July he travels from Berlin to Mongolia. In August he returns to Berlin and goes to Italy, to a painting course at Castello del Trebbio.'],
+   ['Thailand, ein Jubiläum und ein Malkurs','Vom 9. Januar bis 4. Februar 2015 ist er in Thailand. Im April ist er in Berlin, Ferch und Heiligendamm, im Mai in Berlin, Friedrichsberg, Konstanz und auf der Insel Mainau, im Juni feiert er das 25-jährige Jubiläum der STBT. Im Juli reist er von Berlin in die Mongolei. Im August kehrt er nach Berlin zurück und fährt nach Italien, zu einem Malkurs auf dem Castello del Trebbio.'],
+   ['Thailand, sebuah jubileum, dan kursus melukis','Dari 9 Januari sampai 4 Februari 2015 ia di Thailand. Pada April ia di Berlin, Ferch, dan Heiligendamm, pada Mei di Berlin, Friedrichsberg, Konstanz, dan di pulau Mainau, dan pada Juni ia merayakan jubileum 25 tahun STBT. Pada Juli ia bepergian dari Berlin ke Mongolia. Pada Agustus ia kembali ke Berlin dan pergi ke Italia, mengikuti kursus melukis di Castello del Trebbio.']),
+ E('2016',['Seventy','Eberhard spends the turn of the year in Bali, in Banjar, from 10 December 2015 to 28 January, then a week in Thailand. In March and April he travels to China, and on 29 and 30 April 2016 he celebrates his 70th birthday. In May he is in Berlin, Konstanz, Salem and Zürich. From 20 to 27 August he attends his second painting course at Castello del Trebbio in Italy, and autumn passes between Berlin and Konstanz.'],
+   ['Siebzig','Den Jahreswechsel verbringt Eberhard auf Bali, in Banjar, vom 10. Dezember 2015 bis 28. Januar, danach eine Woche in Thailand. Im März und April reist er nach China, und am 29. und 30. April 2016 feiert er seinen 70. Geburtstag. Im Mai ist er in Berlin, Konstanz, Salem und Zürich. Vom 20. bis 27. August besucht er seinen zweiten Malkurs auf dem Castello del Trebbio in Italien, der Herbst vergeht zwischen Berlin und Konstanz.'],
+   ['Tujuh puluh','Pergantian tahun dihabiskan Eberhard di Bali, di Banjar, dari 10 Desember 2015 sampai 28 Januari, lalu seminggu di Thailand. Pada Maret dan April ia bepergian ke Tiongkok, dan pada 29 dan 30 April 2016 ia merayakan ulang tahun ke-70. Pada Mei ia di Berlin, Konstanz, Salem, dan Zürich. Dari 20 sampai 27 Agustus ia mengikuti kursus melukis keduanya di Castello del Trebbio, Italia, dan musim gugur berlalu antara Berlin dan Konstanz.']),
+ E('2017',['Seventy plus','In July 2017 he writes another stock-take, “70+”, and in October 2019, at 73½, a new one titled “Realities”.'],
+   ['Siebzig plus','Im Juli 2017 schreibt er eine weitere Zwischenbilanz, „70+“, und im Oktober 2019, mit 73½, eine neue mit dem Titel „Realitäten“.'],
+   ['Tujuh puluh lebih','Pada Juli 2017 ia menulis tinjauan hidup lagi, “70+”, dan pada Oktober 2019, di usia 73½, yang baru berjudul “Realitas”.']),
+ E('2017',['Friedrichsberg, Mongolia and China','In May and June 2017 the albums mention a buyer for Friedrichsberg and a notary contract in Berlin. In July he travels to Mongolia and to China, in September to Tuscany for an art course, and in October to Konstanz and Venice.'],
+   ['Friedrichsberg, Mongolei und China','Im Mai und Juni 2017 erwähnen die Alben einen Käufer für Friedrichsberg und einen Notarvertrag in Berlin. Im Juli reist er in die Mongolei und nach China, im September in die Toskana zu einem Kunstkurs, im Oktober nach Konstanz und Venedig.'],
+   ['Friedrichsberg, Mongolia, dan Tiongkok','Pada Mei dan Juni 2017 album menyebut pembeli untuk Friedrichsberg dan kontrak notaris di Berlin. Pada Juli ia bepergian ke Mongolia dan Tiongkok, pada September ke Toskana untuk kursus seni, dan pada Oktober ke Konstanz dan Venesia.']),
+  E('2018',['Mongolia, Bali and Thailand','From 10 December 2017 to 13 January 2018 he travels in Mongolia and Bali, and from 13 January to 11 February in Thailand.'],
+   ['Mongolei, Bali und Thailand','Vom 10. Dezember 2017 bis 13. Januar 2018 reist er in der Mongolei und auf Bali, vom 13. Januar bis 11. Februar in Thailand.'],
+   ['Mongolia, Bali, dan Thailand','Dari 10 Desember 2017 sampai 13 Januari 2018 ia bepergian di Mongolia dan Bali, dan dari 13 Januari sampai 11 Februari di Thailand.']),
+ E('2018',['Birthday at Schloss Jahnsfelde','On 29 April 2018 Eberhard celebrates his birthday at Schloss Jahnsfelde and presents the first provisional edition of “Aus meinem Leben”.'],
+   ['Geburtstag auf Schloss Jahnsfelde','Am 29. April 2018 feiert Eberhard seinen Geburtstag auf Schloss Jahnsfelde und stellt die erste vorläufige Edition von „Aus meinem Leben“ vor.'],
+   ['Ulang tahun di Schloss Jahnsfelde','Pada 29 April 2018 Eberhard merayakan ulang tahunnya di Schloss Jahnsfelde dan memperkenalkan edisi pertama sementara “Aus meinem Leben”.'],
+   [['jahnsfelde',435,L('Schloss Jahnsfelde','Schloss Jahnsfelde','Schloss Jahnsfelde')]])
+ ]}]}
+];
+
+const NAV=[['roots',L('Roots','Wurzeln','Akar')],['c1946','1946–69'],['c1970','1970s'],['c1980','1980s'],['c1990','1990s'],['c2000','2000s'],['c2010','2010s'],['bali','Bali'],['titles',L('Titles','Titel','Gelar')],['albums',L('Albums','Alben','Album')],['thoughts',L('Writings','Texte','Tulisan')]];
+const QUAL=[
+['1966',L('Bankkaufmann','Bankkaufmann','Bankkaufmann'),L('Bank clerk apprenticeship, Volksbank Tuttlingen','Lehre bei der Volksbank Tuttlingen','Magang pegawai bank, Volksbank Tuttlingen')],
+['1970',L('Steuerbevollmächtigter','Steuerbevollmächtigter','Steuerbevollmächtigter'),L('Tax representative, Oberfinanzdirektion Stuttgart','Oberfinanzdirektion Stuttgart','Kuasa pajak, Oberfinanzdirektion Stuttgart')],
+['1973',L('Rechtsbeistand','Rechtsbeistand','Rechtsbeistand'),L('Legal adviser, Landgericht Rottweil','Landgericht Rottweil','Penasihat hukum, Landgericht Rottweil')],
+['1976',L('Steuerberater','Steuerberater','Steuerberater'),L('Tax adviser, Finance Ministry of Baden-Württemberg','Finanzministerium Baden-Württemberg','Konsultan pajak, Kementerian Keuangan Baden-Württemberg')],
+['1976',L('Professor of Tax Law','Professor of Tax Law','Professor of Tax Law'),L('Cooperating University of America','Cooperating University of America','Cooperating University of America')],
+['1985',L('Data processing with BASIC','Dateiverarbeitung mit BASIC','Pengolahan data dengan BASIC'),L('Adult education association Baden-Württemberg','Volkshochschulverband Baden-Württemberg','Asosiasi pendidikan dewasa Baden-Württemberg')],
+['1988',L('Wirtschaftsprüfer','Wirtschaftsprüfer','Wirtschaftsprüfer'),L('Public auditor, Ministry of Economics Baden-Württemberg','Wirtschaftsministerium Baden-Württemberg','Auditor publik, Kementerian Ekonomi Baden-Württemberg')],
+['1992',L('Doctor of Philosophy h.c.','Doctor Philosophiae h.c.','Doctor Philosophiae h.c.'),L('Ministry of Education of the Russian Federation, Moscow','Bildungsministerium der Russischen Föderation, Moskau','Kementerian Pendidikan Federasi Rusia, Moskow')],
+['1993',L('Rechtsbeistand, Konstanz','Rechtsbeistand, Konstanz','Rechtsbeistand, Konstanz'),L('Landgericht Konstanz','Landgericht Konstanz','Landgericht Konstanz')],
+['1993',L('Bismarck Commemorative Medal, silver','Bismarck-Erinnerungsmedaille in Silber','Medali Kenangan Bismarck, perak'),L('Fürst von Bismarck, Friedrichsruh','Fürst von Bismarck, Friedrichsruh','Fürst von Bismarck, Friedrichsruh')],
+['1993',L('Gold medal of honour','Ehrenmedaille in Gold','Medali kehormatan emas'),L('For promoting scientific work, Akademie für die Wissenschaft des Judentums, Berlin','Für die Förderung wissenschaftlicher Arbeiten, Akademie für die Wissenschaft des Judentums, Berlin','Atas dukungan pada karya ilmiah, Akademie für die Wissenschaft des Judentums, Berlin')],
+['1993',L('German Sports Badge, bronze','Deutsches Sportabzeichen in Bronze','Lencana Olahraga Jerman, perunggu'),L('Deutscher Sportbund','Deutscher Sportbund','Deutscher Sportbund')]
+];
+const FAM=[
+['adam','Adam Teufel','1858–1923',L('Great-grandfather','Urgroßvater','Buyut laki-laki')],
+['friederike','Friederike Teufel','1859–1942',L('Great-grandmother, née Muckenfuß','Urgroßmutter, geb. Muckenfuß','Buyut perempuan, née Muckenfuß')],
+['eugen','Eugen Teufel','1887–1977',L('Grandfather','Großvater','Kakek')],
+['marie','Marie Teufel','1892–1982',L('Grandmother, née Marty','Großmutter, geb. Marty','Nenek, née Marty')],
+['family','Ernst and Anna Teufel','1911–2006 · 1918–1999',L('Parents, with Eberhard as a boy','Eltern, mit Eberhard als Junge','Orang tua, bersama Eberhard kecil')],
+['brothers','Eberhard and Dieter','',L('The two brothers. Eberhard’s first castle','Die beiden Brüder. Eberhards erste Burg','Dua bersaudara. Kastil pertama Eberhard')]
+];
+const QS=[
+['1983',L('A life that is mapped out in advance is no life, because it misses what matters.','Ein Leben, das vorgezeichnet ist, ist kein Leben, denn es geht am Wesentlichen vorbei.','Hidup yang sudah digariskan sebelumnya bukanlah hidup, sebab ia melewatkan hal yang paling penting.'),'Ein Leben, das vorgezeichnet ist, ist kein Leben, denn es geht am Wesentlichen vorbei.'],
+['1985',L('What good can I do? Whom can I do good to?','Was kann ich Gutes tun? Wem kann ich Gutes tun?','Kebaikan apa yang bisa kulakukan? Kepada siapa aku bisa berbuat baik?'),'Was kann ich Gutes tun? Wem kann ich Gutes tun?'],
+['1996',L('Nature is pure love, nature is endless eternity, nature is the stream of all strength and creation.','Natur ist reine Liebe, Natur ist endlose Ewigkeit, Natur ist der Strom aller Kraft und Schöpfung.','Alam adalah cinta murni, alam adalah keabadian tanpa akhir, alam adalah aliran segala kekuatan dan penciptaan.'),'Natur ist reine Liebe, Natur ist endlose Ewigkeit, Natur ist der Strom aller Kraft und Schöpfung.'],
+['1997',L('Happiness lies within myself: I shape my life.','Glück liegt in mir selbst: Ich gestalte mein Leben.','Kebahagiaan ada dalam diriku sendiri: aku membentuk hidupku.'),'Glück liegt in mir selbst: Ich gestalte mein Leben.'],
+['1998',L('True insight lies only in the variety of endless insights.','Die wahre Erkenntnis liegt nur in der Vielfalt unendlicher Erkenntnisse.','Pemahaman sejati hanya terletak pada keragaman pemahaman yang tak terhingga.'),'Die wahre Erkenntnis liegt nur in der Vielfalt unendlicher Erkenntnisse.'],
+['2000',L('Even the smallest beginning is a great success.','Selbst der kleinste Anfang ist ein großer Erfolg.','Bahkan permulaan terkecil pun adalah keberhasilan besar.'),'Selbst der kleinste Anfang ist ein großer Erfolg.'],
+['2004',L('Life is the journey to oneself.','Das Leben ist die Reise zu sich selbst!','Hidup adalah perjalanan menuju diri sendiri.'),'Das Leben ist die Reise zu sich selbst!'],
+['1983',L('The circle has no beginning and no end; the path of eternity has neither time nor space.','Der Kreis hat keinen Anfang und kein Ende, der Weg der Ewigkeit hat weder Zeit noch Raum.','Lingkaran tidak punya awal dan akhir; jalan keabadian tidak punya waktu maupun ruang.'),'Der Kreis hat keinen Anfang und kein Ende, der Weg der Ewigkeit hat weder Zeit noch Raum.']
+];
+const ARCH=[
+['ET1–2',L('Life, family tree and photographs','Aus meinem Leben, Stammbaum und Fotos','Kehidupan, silsilah, dan foto')],
+['Ausb',L('Schools, training and titles, from 1953','Schul- und Berufsausbildungen, ab 1953','Sekolah, pendidikan, dan gelar, sejak 1953')],
+['ErkGed 1–7',L('Insights and thoughts, from 1978','Erkenntnisse und Gedanken, ab 1978','Pemahaman dan pikiran, sejak 1978')],
+['GED 1–2',L('Poems, from 1978','Gedichte, ab 1978','Puisi, sejak 1978')],
+['REI',L('Travel reports, from 1978','Reiseberichte, ab 1978','Laporan perjalanan, sejak 1978')],
+['Träume',L('Dreams, from 1979','Träume, ab 1979','Mimpi, sejak 1979')],
+['Fotos 1–140',L('Photographs and journeys, 1800s to today (partly incomplete)','Fotos und Reisen, 1800er bis heute (teilweise unvollständig)','Foto dan perjalanan, abad ke-19 hingga kini (sebagian belum lengkap)')]
+];
+
+const ALBUMS=[["Fotos_und_Reisen1", "1", "c1946", "18xxff. 18xx ff. Ahnen TUT · Adam Teufel Friederike Teufel · 1946 ET ff, TUT+ÜEB", 16], ["Fotos_und_Reisen2", "2", "c1946", "1960 ff Bad Ragaz · 1960 ff Kopp Metzger u.a UEB · 1960 ff Schweiz Wallisellen", 6], ["Fotos_und_Reisen3", "3", "c1946", "Balz / Teufel · Urkunde OB Balz · Grundsteinlegung Tuttlinger Hallenschwimmbad mit Urkunde für den Initiator Ernst Teufel (Vater) für den „Gemeinnützigen Verein zur Förde", 108], ["Fotos_und_Reisen4", "4", "c1970", "1973 Luxemburg,TUT,BadVals,Bonn,CapdAil · Luxemburg, Parc d’Europe, Europaterrassen · Tuttlingen, Ludwig-Finckh-Weg 12, Ehrenberg", 75], ["Fotos_und_Reisen5", "5", "c1970", "1979 TUT,F-Colmar,Ägypten, · Besuch einer Schule in KAIRO · 1979 TUT,F-Colmar,Ägypten,GenferSee,Italien,BER", 26], ["Fotos_und_Reisen6", "6", "c1980", "Gebertingen, Sonnenbergstraße (Schweiz) · 1981 Philippinen", 16], ["Fotos_und_Reisen7-1", "7-1", "c1980", "Italien, Scopello, 19. Juli – 9. August 1981", 6], ["Fotos_und_Reisen7-2", "7-2", "c1980", "Hochzeit Dieter Teufel und Ingrid Weinmann · 1982.04.04-22 Venezuela Caracas usw.", 16], ["Fotos_und_Reisen8", "8", "c1980", "1983 I-Sizilien Taomina + GN,Bodensee,BER · 1983.12.25-1984.01.16 Venezuela Canaracunis usw · 1984 P-Corfu,Frbg.Eva,ÜB,Rosb.MM,Felix", 34], ["Fotos_und_Reisen9", "9", "c1980", "1984.12.25-1985.01.21 USA Kalifornien BigSur +GN · 1985 Eva’s 10. Geburtstag am 10. September 1985 in Freiburg · 1985.07.15-22 S-LaPalma Gruppe Manfred Müller", 56], ["Fotos_und_Reisen10", "10", "c1980", "1985.09.28-10.05 Griechenland Poros · 1985.12.27-1986.01.11 Thailand,Pattaya,Bangkok + GN · 1986 GN,Frankr.MonacoItal.Span.,ÜB,I-Mte.scudaioMM", 27], ["Fotos_und_Reisen11-1", "11-1", "c1980", "1986.12.26-1987.01.17 Togo + GN · 1987.05.25-06.08 Toskana MassaMarittima +GN · 1987.05-06 Carmen Hummer, Überlingen", 52], ["Fotos_und_Reisen11-2", "11-2", "c1980", "1988.03.13-20 Israel, Eilat + GN · 1988.04.10 Überl. 70.Geb .AnnaTeufel", 9], ["Fotos_und_Reisen11-3", "11-3", "c1980", "1988.07.05-13 USA, NewYork · Delmonica Plaza 55th, NY", 6], ["Fotos_und_Reisen12", "12", "c1980", "1988.10.15 Don.esch. Öschberghof, Wir.prüf.-Feier ET · 1988.12.29-1989.01.13 Mauritius+Reunion +GN · 1989.03 Konstanz RHG15-Seeheim +Senta", 27], ["Fotos_und_Reisen13", "13", "c1980", "Schloss Seeheim, Eichhornstr. 86 · 1989.07 München, Geb.haus GabiNardella · 1989.07 Tuttlingen, Geb.haus EberhardTeufel", 46], ["Fotos_und_Reisen14", "14", "c1990", "1990.07 (1992.06) Steuerbüro Oranienburger Str. 34 · 1990.07 Zinnowitz (IG Wismut) · 1990.09.15-29 Italien + GN", 87], ["Fotos_und_Reisen15", "15", "c1990", "1992.07.03 Steuerbüro TUT Moltkestr. 41 (Auszug) · 1992.07-08 Russland (Moskau+Sibirien) +GN · 1993.04.11-25 Israel, Ein Gedi, Totes Meer (+GN)", 95], ["Fotos_und_Reisen16", "16", "c1990", "1994.08.15-21 Paris + Disneyland +GN · 1994.12.25-1995.01.185ß Dom.Rep.+Haiti +GN · 1995 Berlin, Reichstagsverhüllung, Schulz, usw.", 42], ["Fotos_und_Reisen17", "17", "c1990", "1995.08.10-21 Italien. Trasimen.See + Ischia · 1995.10.03 Friedrichsruh, Bismarck Medaille GN+ET · 1995.10.20-27 Türkei, Staudamm, HelmutG.+Eva", 32], ["Fotos_und_Reisen18-1", "18-1", "c1990", "1995.11+12 Konstanz,Berlin, Frdbg., Hund Emmy", 8], ["Fotos_und_Reisen18-2", "18-2", "c1990", "1995.12.24-1996.01.02 Kitzbühel, Astron, GN+ET", 7], ["Fotos_und_Reisen19-1", "19-1", "c1990", "1995-1996 Konstanz, Jana, usw.", 7], ["Fotos_und_Reisen19-2", "19-2", "c1990", "1996.01.08-25 Brasilien ET", 12], ["Fotos_und_Reisen20-1", "20-1", "c1990", "1996.01.08-25 Brasilien ET · 1996.04.13-05.02 Bali (Mathahari) Geb.GN+ET · 1996.07 BER Bl47 + Italien-Siena Malkurs", 86], ["Fotos_und_Reisen20-2", "20-2", "c1990", "1997.07.19-08.01 Italien-Cortona Malkurs", 5], ["Fotos_und_Reisen20-3", "20-3", "c1990", "Photographs", 6], ["Fotos_und_Reisen21-1", "21-1", "c1990", "1997.11-1998ff Mikro,Fa. · 1997.12.26-31. Schweiz Vulpera GN · 1998.01.01-22 Thailand + JB-So", 31], ["Fotos_und_Reisen21-2", "21-2", "c1990", "Photographs", 33], ["Fotos_und_Reisen22", "22", "c1990", "1998-1999 CH+BER+Tosk.+KON(HW)+KopfET+TUT", 73], ["Fotos_und_Reisen23", "23", "c1990", "Photographs", 17], ["Fotos_und_Reisen24", "24", "c2000", "1999.12.24-2000.01.15 Kuba + GN · 2000.07.08 Berlin LoveParade", 20], ["Fotos_und_Reisen26", "26", "c2000", "2000.09.13-20 Mallorca + JB-So", 15], ["Fotos_und_Reisen27", "27", "c2000", "2000.12.24-2001.01.11 Thailand+LaoyaResort + JB-So · 2001.04 Ägypten · 2001.07.14 BER, Alexander Nardella, Hochzeit (1)", 27], ["Fotos_und_Reisen28", "28", "c2000", "2001.09.14-16 STBT Jub. Mainau+Überlingen+KON+Zürich+Meersburg · 2001.12.23-2002.01.17 Klinik Wollmarshöhe, ET BurnOut · 2002 Frühjahr, Schaffhausen + LuganerSee (Arlandt", 54], ["Fotos_und_Reisen29-1", "29-1", "c2000", "2002.10.04 Zürich EFAS Schauspielschule Eva", 6], ["Fotos_und_Reisen29-2", "29-2", "c2000", "2002.10.13-20 Marrakesch Malkurs Heinz Rakowitz", 17], ["Fotos_und_Reisen30", "30", "c2000", "2002.12.28-2003.01.23 Thailand PhiPhi Islands + JB-So · 2003.04 TUT Nico Kommunion · 2003.06 Caputh Hund Gabi", 61], ["Fotos_und_Reisen31", "31", "c2000", "2004.02 KON SS BerlinerSalon · 2004.07 TUT Ernst Teufel · 2005.07.01 STBT Jubilaeum Frdbg", 26], ["Fotos_und_Reisen32", "32", "c2000", "2005.09 BER + Frdbg + Strausberg · 2005.09 China(1) Shanghai Beijing,Berlin\\2005.09 · GEELY Automob.", 67], ["Fotos_und_Reisen33", "33", "c2000", "2005.12-2006.01 Thailand Pattaya usw · 2006.02 BER + Stelzer + Frdbg.Div. usw · 2006.03 China Beijing-PEK+Tianjing+YH", 45], ["Fotos_und_Reisen34", "34", "c2000", "Photographs", 13], ["Fotos_und_Reisen35", "35", "c2000", "2006.04 KON Bodensee + Geb.ET", 12], ["Fotos_und_Reisen36-1", "36-1", "c2000", "Photographs", 5], ["Fotos_und_Reisen36-2", "36-2", "c2000", "Photographs", 5], ["Fotos_und_Reisen37-1", "37-1", "c2000", "Photographs", 7], ["Fotos_und_Reisen37-2", "37-2", "c2000", "2006.04+05 Konstanz Berlin Freudenberg Chi, tw.", 6], ["Fotos_und_Reisen38", "38", "c2000", "2006.05 China Beijing-PEK+YH+Guangzhou", 13], ["Fotos_und_Reisen39-1", "39-1", "c2000", "Photographs", 6], ["Fotos_und_Reisen39-2", "39-2", "c2000", "Photographs", 4], ["Fotos_und_Reisen39-3", "39-3", "c2000", "Photographs", 6], ["Fotos_und_Reisen40", "40", "c2000", "2006.07 China Beijing-PEK+YH · 2006.07 KON Chinabesuch SCITECH · 2006.07 KON Uni Shanghai China", 26], ["Fotos_und_Reisen41", "41", "c2000", "2006.08 China Shanghai+Beijing +HvP · 2006.09 HALLE Willi Sitte (2013.06+)", 26], ["Fotos_und_Reisen42", "42", "c2000", "2006.09 Ostsee HongYun · 2006.10 KON+Helga Rost-Haufe SS", 17], ["Fotos_und_Reisen43", "43", "c2000", "2006.11.08-22 Thailand+PhiPhi DS", 18], ["Fotos_und_Reisen44", "44", "c2000", "2006.11.26 TUT, Ernst Teufel + · 2006.12 TUT, Weihnachten 2006 DT · 2006.12.04 BER Botschaft UAE", 29], ["Fotos_und_Reisen45", "45", "c2000", "Photographs", 20], ["Fotos_und_Reisen46-1", "46-1", "c2000", "2007.02 TUT Stock.Str. Eva + KON Seele", 7], ["Fotos_und_Reisen46-2", "46-2", "c2000", "2007.03 BER PALAST der Republik", 10], ["Fotos_und_Reisen47-1", "47-1", "c2000", "2007.03 Teneriffa+Seele · 2007.04.28 KON SS Schmid", 19], ["Fotos_und_Reisen47-2", "47-2", "c2000", "2007.04.29 KON SS Geb.ET+Mothes + Seele, tw.", 7], ["Fotos_und_Reisen47-3", "47-3", "c2000", "Photographs", 10], ["Fotos_und_Reisen48", "48", "c2000", "2007.05 Nizza+MonteCarlo+Seele · Gabi’s Mutter Elisabeth Schweigut gestorben · 2007.05 Stelzer Beerdigung", 29], ["Fotos_und_Reisen49-1", "49-1", "c2000", "2007.06 KON SS (Stelzer-Gruppe), BER Fest Grosse, usw · 2007.06 Mongolei+Seele", 6], ["Fotos_und_Reisen50", "50", "c2000", "Photographs", 18], ["Fotos_und_Reisen51-1", "51-1", "c2000", "2007.07 KON+BER(+Hotel StankoRamljak)", 6], ["Fotos_und_Reisen51-2", "51-2", "c2000", "Photographs", 6], ["Fotos_und_Reisen52-1", "52-1", "c2000", "2007.08 KON SS Whiskyparty", 7], ["Fotos_und_Reisen52-2", "52-2", "c2000", "2007.08 KON SS, Hochzeit Eva+Philipp", 6], ["Fotos_und_Reisen53-1", "53-1", "c2000", "Photographs", 6], ["Fotos_und_Reisen53-2", "53-2", "c2000", "Photographs", 16], ["Fotos_und_Reisen54", "54", "c2000", "2007.09-10 China BeijingPeking YH", 22], ["Fotos_und_Reisen55", "55", "c2000", "Photographs", 13], ["Fotos_und_Reisen56-1", "56-1", "c2000", "2007.10 BER + Otgo Dt.Bk", 6], ["Fotos_und_Reisen56-2", "56-2", "c2000", "2007.11 Thailand DS, tw.", 9], ["Fotos_und_Reisen56-3", "56-3", "c2000", "2007.12 BER RizCarlton Weihnachten · 2007.12 KON Sylvester", 18], ["Fotos_und_Reisen57", "57", "c2000", "2007.12 Seefeld+Seele · 2008.01 LaReunion ET · 2008.02 BER, Chin.Neujahr + KON, Fasching", 33], ["Fotos_und_Reisen57-2", "57-2", "c2000", "2008.01 LaReunion ET · 2008.02 BER, Chin.Neujahr + KON, Fasching", 16], ["Fotos_und_Reisen58-1", "58-1", "c2000", "2008.03 KON+SS + BER + Hochhuth Rolf", 9], ["Fotos_und_Reisen58-2", "58-2", "c2000", "Photographs", 12], ["Fotos_und_Reisen59-1", "59-1", "c2000", "2008.04-05 Thailand DS", 17], ["Fotos_und_Reisen59-2", "59-2", "c2000", "2008.06 RUANDA I", 17], ["Fotos_und_Reisen60-1", "60-1", "c2000", "Photographs", 9], ["Fotos_und_Reisen60-2", "60-2", "c2000", "2008.07 RUANDA II", 16], ["Fotos_und_Reisen61", "61", "c2000", "Photographs", 24], ["Fotos_und_Reisen62", "62", "c2000", "2008.08 BER (GoodFriends,ChinAusst.,Olymp.Sp.) +KON · 2008.08 KON, FLUG BODENSEE", 17], ["Fotos_und_Reisen63", "63", "c2000", "2008.09 RUANDA III", 12], ["Fotos_und_Reisen64", "64", "c2000", "2008.12.02 BER, VerArabEmirate", 17], ["Fotos_und_Reisen65", "65", "c2000", "2008.12.31 KON SS, Sylvester · 2009.01 Thailand usw +BER", 35], ["Fotos_und_Reisen66", "66", "c2000", "Photographs", 24], ["Fotos_und_Reisen67", "67", "c2000", "Photographs", 18], ["Fotos_und_Reisen68-1", "68-1", "c2000", "2009.03 China BeijingPekingYH + ChangshaCL\\2009.03 Beijing", 18], ["Fotos_und_Reisen68-2", "68-2", "c2000", "Photographs", 24], ["Fotos_und_Reisen69", "69", "c2000", "2009.04 BER+Yatrib+EdRowan+CarFi+HR+Zezeg+KON+RHG15", 21], ["Fotos_und_Reisen70", "70", "c2000", "Photographs", 20], ["Fotos_und_Reisen71", "71", "c2000", "Photographs", 35], ["Fotos_und_Reisen72", "72", "c2000", "2009.08 Thailand (+Haus Daow)", 17], ["Fotos_und_Reisen73", "73", "c2000", "2009.09 China Hangshou Peking Ulaanbaator", 38], ["Fotos_und_Reisen74", "74", "c2000", "2009.10 Div.ff +BER+Frdg+TUT+KON+(OpET) · 2009.11 KON · 2009.12 BER+KON", 37], ["Fotos_und_Reisen75", "75", "c2000", "2009.12.-2010.01 Thailand BKK HuaHin+BT+MT", 23], ["Fotos_und_Reisen76", "76", "c2010", "2010.01 BeijingPeking +BER(+CF) · 2010.01 Thailand Pattaya", 19], ["Fotos_und_Reisen77", "77", "c2010", "2010.02 BER(CF+Chin.Nj.) + KON Unf.Treppe + E88a", 18], ["Fotos_und_Reisen78", "78", "c2010", "2010.03 Mongolei BT", 18], ["Fotos_und_Reisen79", "79", "c2010", "Aml - Fotos und Reisen79 · 2010.04 Bali ET", 24], ["Fotos_und_Reisen80", "80", "c2010", "2010.04/05 Frdbg + BER + KON(Geb.ET)", 22], ["Fotos_und_Reisen81", "81", "c2010", "2010.05 Mongolei +BT", 17], ["Fotos_und_Reisen82", "82", "c2010", "2010.06 BER + Gal.CF +II · 2010.07 KON + ET(OP)", 22], ["Fotos_und_Reisen83", "83", "c2010", "2010.08 Sardinien+Korsika NY", 19], ["Fotos_und_Reisen84", "84", "c2010", "2010.10 BER (Mgl.Präs.Otgo) · 2010.10 Malaysia Langkawi BT", 18], ["Fotos_und_Reisen85", "85", "c2010", "Photographs", 21], ["Fotos_und_Reisen86", "86", "c2010", "2010.11 KON + BER + TUT+DT", 27], ["Fotos_und_Reisen87", "87", "c2010", "2010.12 China Hainan YH · ‘", 29], ["Fotos_und_Reisen88", "88", "c2010", "2010.12 Div.ff + BER+STBT+BT", 19], ["Fotos_und_Reisen89", "89", "c2010", "2011.01 China (BeijingPeking+HainanSanya)YH", 22], ["Fotos_und_Reisen90", "90", "c2010", "2011.04 China BeijingPeking YH", 22], ["Fotos_und_Reisen91", "91", "c2010", "2011.05 Div.ff+China + YH · 2011.07 BER + Frdbg + CH Verk.Gebert.+ KON+YH · 2011.07 Monte Carlo (HdP+Col)", 46], ["Fotos_und_Reisen92", "92", "c2010", "Verkauf Wohnung Gebertingen, Notartermin 2011.07.18 · 2011.08 BER+(Geb.MH) + Frdbg-Beiersd(PD) · 2011.08 Nizza + YH", 31], ["Fotos_und_Reisen93", "93", "c2010", "2011.09 (ChinaYH)+KON-SS(Ds)+Frdbg+Pagode+BER+YH · 2011.11 BER + Potsd. +Qin + KON SS + TUT + Neuh. +YH", 32], ["Fotos_und_Reisen94", "94", "c2010", "(94) Fotos\\2011.12 BER Qin + KON + TUT + Frid.R + Weih. + YH", 20], ["Fotos_und_Reisen95", "95", "c2010", "2012.01 Thailand+HGK+Macao+Shenzhen+Pattaya+MT", 23], ["Fotos_und_Reisen96", "96", "c2010", "2012.02 Frdbg+FfO EUoH +BER Berlinale + Qin + YH · 2012.03 Thail.PattayaRayong+So. China BeijingPeking+YH", 32], ["Fotos_und_Reisen97", "97", "c2010", "2012.04 BER + KON SS E88 + Frdbg.Finow +YH · 2012.04.29 Frdbg. Geb.ET Frdbg. Hund + YH", 24], ["Fotos_und_Reisen98", "98", "c2010", "2012.05 China BeijingPeking + YH · 2012.05 KON SS HvB + Frdbg + BER + YH", 17], ["Fotos_und_Reisen99", "99", "c2010", "2012.06 BER + KON SS + Frdbg.+ Hund · 2012.07 Frdbg.+KON+Schl.Blumenf.ET+Rheinf.+BER", 21], ["Fotos_und_Reisen100", "100", "c2010", "2012.08 BER + Potsd. +RS + YH · 2012.08 Italien Ischia + YH", 28], ["Fotos_und_Reisen101", "101", "c2010", "2012.11 China BeijingPeking + RS + YH", 26], ["Fotos_und_Reisen102", "102", "c2010", "2013.01 Bali Banjar +YH", 23], ["Fotos_und_Reisen103", "103", "c2010", "2013.02 BER + KON SS Fasch.+YH · 2013.03 BER + KON SS WvS + Frid.FR + Wien +BT · 2013.04 BER (OP) + KON SS + Ulm + Geb.ET + BT", 26], ["Fotos_und_Reisen104", "104", "c2010", "2013.04 China Hainan +YH", 20], ["Fotos_und_Reisen105-1", "105-1", "c2010", "2013.05 KON SS + BER + Ulm BT · 2013.05-06 MonteCarlo+Venedig+Kroatien+YH", 28], ["Fotos_und_Reisen105-2", "105-2", "c2010", "2013.07 BER + Frdbg.+ KON SS", 22], ["Fotos_und_Reisen106", "106", "c2010", "2013.09 BER + KON SS + Singen + Geb.YH · 2013.10 Mallin + KON SS E88 RHG", 19], ["Fotos_und_Reisen107", "107", "c2010", "2013.10 Ruanda KIGALI IV Verk.Grdst", 21], ["Fotos_und_Reisen108", "108", "c2010", "2013.12 Frid.R + KON + BER TLS (+Bali) · 2013.12.14-2014.01.31 Bali YH+Thailand YH+So", 34], ["Fotos_und_Reisen109", "109", "c2010", "2013.12.14-2014.01.31 Bali YH+Thailand YH+So · 2014.02 ChinaYH + Div. KON + BT + ZH", 26], ["Fotos_und_Reisen110", "110", "c2010", "2014.03 CN-YH + Div. + (Zichow) + Ascamed", 27], ["Fotos_und_Reisen111", "111", "c2010", "2014.04.28-05.03 CostaDelSol Marbella + YH · 2014.05 Div.ff BER YH Caputh GN Cuba MP · 2014.06 Rudolf Vertrag + KON", 51], ["Fotos_und_Reisen112", "112", "c2010", "2014.07.30-08.08. St.Margherita Lig.Ital. BT · 2014.08.22-27. China BeiDaiHe HotWangHai YH", 24], ["Fotos_und_Reisen113", "113", "c2010", "2014.12.09-2015.01.08 Bali", 26], ["Fotos_und_Reisen114", "114", "c2010", "2015.01.09-2015.02.04 Thailand SIN", 22], ["Fotos_und_Reisen115", "115", "c2010", "2015.04 BER+Ferch+RolfSchmid+Heiligendamm", 16], ["Fotos_und_Reisen116", "116", "c2010", "2015.05 BER Chin. Frid. KON Mainau Brdbg + YH", 19], ["Fotos_und_Reisen117", "117", "c2010", "2015.06 BER KON+CQ + Jub.25J STBT", 18], ["Fotos_und_Reisen118", "118", "c2010", "2015.07 BER + Mongolei Otgo+YH · 2015.08 BER K134+LietzEK13+Frdbg.+Italien", 62], ["Fotos_und_Reisen119", "119", "c2010", "2015.08 Malkurs Italien Castello del Trebbio", 31], ["Fotos_und_Reisen120", "120", "c2010", "2015.10 BER+Frdbg.+Krops.+KON · 2015.11 BER+DATEV+Krops", 23], ["Fotos_und_Reisen121", "121", "c2010", "2015.12.10-2016.01.28 Bali Banjar YH", 32], ["Fotos_und_Reisen122", "122", "c2010", "2016.01.28-02.05 Thailand Pattaya JB", 25], ["Fotos_und_Reisen123", "123", "c2010", "2016.03 Cottbus+BER+Krop+China 24.3.-3.4", 23], ["Fotos_und_Reisen124", "124", "c2010", "2016.04 Krop + BER + Geb.Markus 33. + KON", 15], ["Fotos_und_Reisen125", "125", "c2010", "2016.04.29-30 Geb. 70. Eberhard Teufel", 61], ["Fotos_und_Reisen126", "126", "c2010", "2016.05 BER Litt + KON + Salemi 9.-13.5. + KRO + ZRH", 28], ["Fotos_und_Reisen127", "127", "c2010", "2016.06 BER FREU LAUS KON · 2016.07 KROP MARW BER", 24], ["Fotos_und_Reisen128", "128", "c2010", "2016.08.20-27 Italien CdT(2) Malkurs", 31], ["Fotos_und_Reisen129", "129", "c2010", "2016.09 BER (Alex) KROP KON AVM · 2016.09.03 Hochzeit Alex + Bianka Nardella · 2016.11+12 KON Sund BER ETkrank", 24], ["Fotos_und_Reisen130", "130", "c2010", "f · 2017.05 BER Käufer Frdbg.+Fest +KN · 2017.06 BER Notarvertrag Frdbg", 21], ["Fotos_und_Reisen131", "131", "c2010", "2017.07 Mongolei (Tsa1)", 25], ["Fotos_und_Reisen132", "132", "c2010", "2017.07 VR China (YH)", 27], ["Fotos_und_Reisen133", "133", "c2010", "2017.08 BER KON", 26], ["Fotos_und_Reisen134", "134", "c2010", "2017.08 BER KON", 30], ["Fotos_und_Reisen135", "135", "c2010", "2017.09 BER Frdbg. ToskanaART KON", 26], ["Fotos_und_Reisen136", "136", "c2010", "2017.10 BER KON + Venedig (+So+Ts)", 19], ["Fotos_und_Reisen137", "137", "c2010", "Photographs", 30], ["Fotos_und_Reisen138", "138", "c2010", "2017.12.10-2018.01.13 MGL+Bali (+Ts)", 24], ["Fotos_und_Reisen139", "139", "c2010", "2018.01.13-02.11 Thailand (+Ts+So)", 54]];
+const DOCS=[['A-Inhaltsverzeichnis','AmL',L('Table of contents','Inhaltsverzeichnis','Daftar isi')],
+['Buch','Buch',L('The printed book: poems, thoughts and paintings','Das gedruckte Buch: Gedichte, Gedanken und Bilder','Buku cetak: puisi, pikiran, dan lukisan'),'Buch',1],
+['Gemaelde','Bilder',L('Paintings and sculptures','Gemälde und Skulpturen','Lukisan dan patung'),'Gemaelde',1],
+['ET1','ET1',L('Aus meinem Leben, part 1','Aus meinem Leben, Teil 1','Aus meinem Leben, bagian 1')],
+['ET2','ET2',L('Aus meinem Leben, part 2','Aus meinem Leben, Teil 2','Aus meinem Leben, bagian 2')],
+['Ausb','Ausb',L('Training and titles','Ausbildung','Pendidikan dan gelar')],
+['Beteil','Beteil',L('Holdings and participations','Beteiligungen','Kepemilikan dan penyertaan'),'Beteil_Bild'],
+['Fir','Fir',L('Firms','Firmen','Perusahaan')],
+['ErkGdk1','ErkGed1',L('Insights and thoughts 1','Erkenntnisse und Gedanken 1','Pemahaman dan pikiran 1')],
+['ErkGdk2','ErkGed2',L('Insights and thoughts 2','Erkenntnisse und Gedanken 2','Pemahaman dan pikiran 2')],
+['ErkGdk3','ErkGed3',L('Insights and thoughts 3','Erkenntnisse und Gedanken 3','Pemahaman dan pikiran 3')],
+['ErkGdk4','ErkGed4',L('Insights and thoughts 4','Erkenntnisse und Gedanken 4','Pemahaman dan pikiran 4')],
+['ErkGdk5','ErkGed5',L('Insights and thoughts 5','Erkenntnisse und Gedanken 5','Pemahaman dan pikiran 5')],
+['ErkGdk6','ErkGed6',L('Insights and thoughts 6','Erkenntnisse und Gedanken 6','Pemahaman dan pikiran 6')],
+['ErkGed7_Tod','ErkGed7',L('Insights and thoughts 7: death','Erkenntnisse und Gedanken 7: Tod','Pemahaman dan pikiran 7: kematian')],
+['GED1','GED1',L('Poems 1','Gedichte 1','Puisi 1')],
+['GED2','GED2',L('Poems 2','Gedichte 2','Puisi 2')],
+['REI','REI',L('Travel reports','Reiseberichte','Laporan perjalanan')],
+['Traeume','Träume',L('Dreams','Träume','Mimpi')],
+['Verm','Verm',L('Assets, from 1963','Vermögen, ab 1963','Harta, sejak 1963')],
+['Immo','Imm',L('Real estate: overview','Immobilien: Übersicht','Properti: ringkasan'),'Immo_none'],
+['Immo_Bild','Imm',L('Real estate: with pictures','Immobilien: mit Bildern','Properti: dengan gambar')],
+['Mgl9','MGL9',L('Mongolian text: the nine principles','Mongolischer Text: die neun Grundsätze','Teks Mongolia: sembilan prinsip')],
+['Mgl_love','MGL Love',L('Mongolian text: love','Mongolischer Text: Liebe','Teks Mongolia: cinta')]];
+UI.menu=L('Contents','Inhalt','Isi');
+UI.g_life=L('Life story','Lebensgeschichte','Kisah hidup');
+UI.g_arch=L('Archive','Archiv','Arsip');
+const NAV2=[
+ ['g_life',[['roots',L('Roots','Wurzeln','Akar')],['c1946','1946–1969'],['c1970','1970–1979'],['c1980','1980–1989'],['c1990','1990–1999'],['c2000','2000–2009'],['c2010','2010–2020'],['bali','Bali']]],
+ ['g_arch',[['titles',L('Titles and honours','Titel und Ehrungen','Gelar dan penghargaan')],['albums',L('Photo albums','Fotoalben','Album foto')],['thoughts',L('Writings','Texte','Tulisan')],['archive',L('About the archive','Über das Archiv','Tentang arsip')]]]
+];
+let lang='en';
+try{const s=localStorage.getItem('et-lang'); if(s&&['en','de','id'].includes(s))lang=s;}catch(e){}
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+const cap=h=>(h||'').replace(/^(Fotos|D)\\+/,'').replace(/,?\s*Fa\.\s*\d+\w*/,'');
+
+function entryHTML(e,l){
+  const t=e.t[l];
+  const w=(e.img&&e.img.length>1)?300:420;
+  const figs=(e.img||[]).map(i=>`<figure><img src="img/${i[0]}.jpg" alt="${esc(i[2][l])}" style="width:min(100%,${Math.min(i[1],w)}px)" loading="lazy"><figcaption>${esc(i[2][l])}</figcaption></figure>`).join('');
+  return `<li><span class="y">${e.y}</span><div><h4>${esc(t[0])}</h4><p>${esc(t[1])}</p>${figs?`<div class="pair">${figs}</div>`:''}</div></li>`;
+}
+function stripHTML(b,l){
+  const items=b.items.map(s=>`<figure><div class="ph"><img src="img/${s.img}.jpg" alt="${esc(s.cap[l])}" loading="lazy"></div>${s.yr?`<span class="yr">${s.yr}</span>`:''}<figcaption>${esc(s.cap[l])}</figcaption></figure>`).join('');
+  return `<div class="sub">${UI[b.title][l]}</div><div class="strip ${b.cls||''}">${items}</div>`;
+}
+function albumsBlock(ch,l,yrs){
+  const a=ALBUMS.filter(x=>x[2]===ch); if(!a.length)return '';
+  return `<div class="sub">${yrs}</div><ul class="albums">`+a.map(x=>`<li><button aria-expanded="false" data-alb="${x[0]}"><span class="n">${x[1]}</span><span class="t">${esc(x[3])}</span><span class="c">${x[4]}</span></button></li>`).join('')+`</ul>`;
+}
+function docsBlock(l){
+  return DOCS.map(d=>`<details class="doc" data-doc="${d[0]}" data-img="${d[3]||d[0]}"${d[4]?' data-tall="1"':''}><summary><span class="k">${esc(d[1])}</span><b>${esc(d[2][l])}</b></summary><div class="body"></div></details>`).join('');
+}
+function render(){
+  const l=lang; document.documentElement.lang=l;
+  document.querySelectorAll('[data-k]').forEach(el=>{const v=UI[el.dataset.k]; if(v) el.textContent=v[l]});
+  document.querySelectorAll('.langs button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.l===l));
+  $('toc').innerHTML=NAV2.map(g=>`<h2>${UI[g[0]][l]}</h2><ul>`+g[1].map(n=>`<li><a href="#${n[0]}">${typeof n[1]==='string'?n[1]:n[1][l]}</a></li>`).join('')+'</ul>').join('');
+  $('facts').innerHTML=UI.facts.map(f=>`<div><dt>${f[0][l]}</dt><dd>${f[1][l]}</dd></div>`).join('');
+  $('fam').innerHTML=FAM.map(f=>`<figure><div class="ph"><img src="img/${f[0]}.jpg" alt="${esc(f[1])}" loading="lazy"></div><b>${f[1]}</b><small>${f[2]?f[2]+'<br>':''}${esc(f[3][l])}</small></figure>`).join('');
+  $('chapters').innerHTML=CH.map(c=>`<section id="${c.id}"><div class="sec-head"><span class="yrs">${c.yrs}</span><h2>${esc(c.title[l])}</h2></div><p class="intro">${esc(c.intro[l])}</p>`+
+    c.blocks.map(b=>b.type==='tl'?`<ol class="tl">${b.entries.map(e=>entryHTML(e,l)).join('')}</ol>`:stripHTML(b,l)).join('')+`</section>`).join('');
+  $('quals').innerHTML=QUAL.map(q=>`<li><span class="y">${q[0]}</span><div><b>${esc(q[1][l])}</b><span>${esc(q[2][l])}</span></div></li>`).join('');
+  $('albgrp').innerHTML=CH.map(c=>albumsBlock(c.id,l,c.yrs+' · '+c.title[l])).join('');
+  $('docs').innerHTML=docsBlock(l);
+  $('qs').innerHTML=QS.map(q=>`<div class="q"><span class="when">${q[0]}</span><blockquote>“${esc(q[1][l])}”</blockquote>${l==='de'?'':`<p class="orig" lang="de">${esc(q[2])}</p>`}</div>`).join('');
+  $('arch').innerHTML=ARCH.map(a=>`<li><span class="k">${a[0]}</span><span>${esc(a[1][l])}</span></li>`).join('');
+  watch();
+}
+
+/* albums, texts, lightbox */
+const loaded={};
+function loadJS(src){return loaded[src]||(loaded[src]=new Promise((ok,no)=>{const s=document.createElement('script');s.src=src;s.onload=ok;s.onerror=()=>{delete loaded[src];no()};document.head.appendChild(s)}))}
+function galHTML(items){let out='',cur=null,open=false;
+  items.forEach((it,i)=>{ if(it.h!==cur){ if(open)out+='</div>'; cur=it.h; if(cur)out+=`<h5>${esc(cap(cur))}</h5>`; out+='<div class="g">'; open=true;}
+    out+=`<button data-i="${i}" aria-label="${i+1}"><img src="${it.u}" alt="" loading="lazy" width="${it.w}" height="${it.x}"></button>`;});
+  return out+(open?'</div>':'');}
+async function fillGal(el,key){
+  el.innerHTML=`<p class="ld">${UI.n_ld[lang]}</p>`;
+  try{await loadJS('alb/'+key+'.js'); const items=window.ALB[key]; el._items=items; el.innerHTML=galHTML(items);}catch(e){el.innerHTML='<p class="ld">–</p>'}
+}
+document.addEventListener('click',e=>{
+  const ab=e.target.closest('[data-alb]');
+  if(ab){const li=ab.parentElement; let g=li.querySelector('.gal');
+    if(g){g.remove();ab.setAttribute('aria-expanded','false');return}
+    g=document.createElement('div');g.className='gal';li.appendChild(g);ab.setAttribute('aria-expanded','true');fillGal(g,ab.dataset.alb);return}
+  const im=e.target.closest('.gal .g button');
+  if(im){const g=im.closest('.gal'); openLB(g._items,+im.dataset.i);return}
+  if(e.target.closest('#toc a'))closeToc();
+});
+document.addEventListener('toggle',async e=>{
+  const d=e.target; if(!d.matches||!d.matches('details.doc')||!d.open||d.dataset.done)return; d.dataset.done=1;
+  const b=d.querySelector('.body'); b.innerHTML=`<p class="ld">${UI.n_ld[lang]}</p>`;
+  try{await loadJS('alb/texts.js');}catch(x){}
+  const t=(window.TXT&&window.TXT[d.dataset.doc])||'';
+  b.innerHTML=(t?`<p class="dnote">${UI.n_orig[lang]}</p><pre></pre>`:'')+`<div class="gal${d.dataset.tall?' tall':''}"></div>`;
+  if(t)b.querySelector('pre').textContent=t;
+  const key=d.dataset.img, g=b.querySelector('.gal');
+  try{await loadJS('alb/'+key+'.js'); const items=window.ALB[key]; if(items&&items.length){g._items=items; g.innerHTML=`<h5>${UI.n_pics[lang]} · ${items.length}</h5><div class="g">`+items.map((it,i)=>`<button data-i="${i}" aria-label="${i+1}"><img src="${it.u}" alt="" loading="lazy" width="${it.w}" height="${it.x}"></button>`).join('')+'</div>'}}catch(x){}
+},true);
+let LB={items:[],i:0};
+function openLB(items,i){LB={items,i};showLB();$('lb').classList.add('on')}
+function showLB(){const it=LB.items[LB.i],lb=$('lb');lb.querySelector('img').src=it.u;lb.querySelector('p').textContent=cap(it.h);lb.querySelector('.ct').textContent=(LB.i+1)+' / '+LB.items.length}
+$('lb').addEventListener('click',e=>{const a=e.target.closest('button');if(!a){if(e.target.id==='lb')$('lb').classList.remove('on');return}
+  const n=LB.items.length;if(a.dataset.a==='x')$('lb').classList.remove('on');else{LB.i=(LB.i+(a.dataset.a==='n'?1:-1)+n)%n;showLB()}});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape')closeToc();
+  if(!$('lb').classList.contains('on'))return;const n=LB.items.length;
+  if(e.key==='Escape')$('lb').classList.remove('on');else if(e.key==='ArrowRight'){LB.i=(LB.i+1)%n;showLB()}else if(e.key==='ArrowLeft'){LB.i=(LB.i-1+n)%n;showLB()}});
+
+/* contents sheet (phone) */
+function closeToc(){document.body.classList.remove('toc-open');$('menu').setAttribute('aria-expanded','false')}
+$('menu').addEventListener('click',()=>{const o=document.body.classList.toggle('toc-open');$('menu').setAttribute('aria-expanded',o)});
+document.querySelector('.langs').addEventListener('click',e=>{const b=e.target.closest('button'); if(!b)return; lang=b.dataset.l; try{localStorage.setItem('et-lang',lang)}catch(x){} render();});
+
+/* highlight the section in view */
+let io=null;
+function watch(){try{ if(io)io.disconnect();
+  const links=[...document.querySelectorAll('#toc a')];
+  io=new IntersectionObserver(es=>{es.forEach(en=>{if(en.isIntersecting){links.forEach(a=>a.removeAttribute('aria-current'));const a=links.find(x=>x.getAttribute('href')==='#'+en.target.id);if(a)a.setAttribute('aria-current','true')}})},{rootMargin:'-20% 0px -70% 0px'});
+  links.forEach(a=>{const s=document.querySelector(a.getAttribute('href')); if(s)io.observe(s)});
+}catch(e){}}
+render();
+</script>
+
+</body></html>
